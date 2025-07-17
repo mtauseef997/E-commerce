@@ -1,0 +1,13 @@
+vendor/
+node_modules/
+.env
+.env.local
+.env.production
+*.log
+public/uploads/*
+!public/uploads/.gitkeep
+config/config.php
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
