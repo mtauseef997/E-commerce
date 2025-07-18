@@ -33,7 +33,7 @@ class ProductController extends Controller
         ];
         $filters = array_filter($filters);
 
-        // Create count filters (exclude sort and order parameters)
+
         $countFilters = array_filter([
             'category_id' => $this->request->get('category'),
             'search' => $this->request->get('search'),
