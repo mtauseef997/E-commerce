@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Core;
+
 abstract class Model
 {
     protected $db;
@@ -32,7 +34,7 @@ abstract class Model
         $whereClause = [];
         $params = [];
         foreach ($conditions as $column => $value) {
-            $whereClause[] = "{$column} = ?";
+            $whereClause[] = "`{$column}` = ?";
             $params[] = $value;
         }
         $sql = "SELECT * FROM {$this->table} WHERE " . implode(' AND ', $whereClause);
@@ -46,7 +48,7 @@ abstract class Model
     public function create($data)
     {
         $data = $this->filterFillable($data);
-        $columns = implode(', ', array_keys($data));
+        $columns = '`' . implode('`, `', array_keys($data)) . '`';
         $placeholders = ':' . implode(', :', array_keys($data));
         $sql = "INSERT INTO {$this->table} ({$columns}) VALUES ({$placeholders})";
         $stmt = $this->db->prepare($sql);
@@ -60,9 +62,9 @@ abstract class Model
         $data = $this->filterFillable($data);
         $setClause = [];
         foreach (array_keys($data) as $column) {
-            $setClause[] = "{$column} = :{$column}";
+            $setClause[] = "`{$column}` = :{$column}";
         }
-        $sql = "UPDATE {$this->table} SET " . implode(', ', $setClause) . " WHERE {$this->primaryKey} = :id";
+        $sql = "UPDATE {$this->table} SET " . implode(', ', $setClause) . " WHERE `{$this->primaryKey}` = :id";
         $data['id'] = $id;
         $stmt = $this->db->prepare($sql);
         return $stmt->execute($data);
@@ -79,7 +81,7 @@ abstract class Model
         if (!empty($conditions)) {
             $whereClause = [];
             foreach ($conditions as $column => $value) {
-                $whereClause[] = "{$column} = ?";
+                $whereClause[] = "`{$column}` = ?";
                 $params[] = $value;
             }
             $sql .= " WHERE " . implode(' AND ', $whereClause);

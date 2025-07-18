@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Core;
+
 class View
 {
     private $viewPath;
@@ -95,7 +97,8 @@ class View
     }
     public function asset($path)
     {
-        return ltrim($path, '/');
+        // For assets in the public directory
+        return rtrim(APP_URL, '/') . '/public/' . ltrim($path, '/');
     }
     public function isActive($route)
     {

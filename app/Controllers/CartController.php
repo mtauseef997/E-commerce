@@ -1,7 +1,10 @@
 <?php
+
 namespace App\Controllers;
+
 use App\Core\Controller;
 use App\Models\Product;
+
 class CartController extends Controller
 {
     private $productModel;
@@ -88,7 +91,7 @@ class CartController extends Controller
         $this->setCart($cart);
         if ($this->request->isAjax()) {
             $this->json([
-                'success' => true, 
+                'success' => true,
                 'message' => 'Product added to cart',
                 'cart_count' => $this->getCartCount()
             ]);
@@ -184,7 +187,7 @@ class CartController extends Controller
     {
         $_SESSION['cart'] = $cart;
     }
-    private function getCartCount()
+    protected function getCartCount()
     {
         $cart = $this->getCart();
         $count = 0;

@@ -1,8 +1,11 @@
 <?php
+
 namespace App\Controllers;
+
 use App\Core\Controller;
 use App\Models\Product;
 use App\Models\Category;
+
 class ProductController extends Controller
 {
     private $productModel;
@@ -18,6 +21,8 @@ class ProductController extends Controller
         $page = (int) $this->request->get('page', 1);
         $limit = PRODUCTS_PER_PAGE;
         $offset = ($page - 1) * $limit;
+
+        // Separate database filters from sorting parameters
         $filters = [
             'category_id' => $this->request->get('category'),
             'search' => $this->request->get('search'),
@@ -27,8 +32,17 @@ class ProductController extends Controller
             'order' => $this->request->get('order', 'DESC')
         ];
         $filters = array_filter($filters);
+
+        // Create count filters (exclude sort and order parameters)
+        $countFilters = array_filter([
+            'category_id' => $this->request->get('category'),
+            'search' => $this->request->get('search'),
+            'min_price' => $this->request->get('min_price'),
+            'max_price' => $this->request->get('max_price')
+        ]);
+
         $products = $this->productModel->getProducts($filters, $limit, $offset);
-        $totalProducts = $this->productModel->count($filters);
+        $totalProducts = $this->productModel->countProducts($countFilters);
         $totalPages = ceil($totalProducts / $limit);
         $categories = $this->categoryModel->getWithProductCount();
         $this->render('products/index', [

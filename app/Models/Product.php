@@ -1,6 +1,9 @@
 <?php
+
 namespace App\Models;
+
 use App\Core\Model;
+
 class Product extends Model
 {
     protected $table = 'products';
@@ -25,11 +28,11 @@ class Product extends Model
     ];
     public function getProducts($filters = [], $limit = PRODUCTS_PER_PAGE, $offset = 0)
     {
-        $sql = "SELECT p.*, c.name as category_name, pi.image_path as primary_image,
-                       AVG(r.rating) as avg_rating, COUNT(r.id) as review_count
-                FROM products p 
-                LEFT JOIN categories c ON p.category_id = c.id 
-                LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_primary = 1
+        $sql = "SELECT p.*, c.name as category_name,
+                       (SELECT pi.image_path FROM product_images pi WHERE pi.product_id = p.id AND pi.is_primary = 1 LIMIT 1) as primary_image,
+                       COALESCE(AVG(r.rating), 0) as avg_rating, COUNT(r.id) as review_count
+                FROM products p
+                LEFT JOIN categories c ON p.category_id = c.id
                 LEFT JOIN reviews r ON p.id = r.product_id AND r.status = 'approved'
                 WHERE p.status = 'active'";
         $params = [];
@@ -83,12 +86,12 @@ class Product extends Model
     public function getBySlug($slug)
     {
         $sql = "SELECT p.*, c.name as category_name, c.slug as category_slug,
-                       AVG(r.rating) as avg_rating, COUNT(r.id) as review_count
-                FROM products p 
-                LEFT JOIN categories c ON p.category_id = c.id 
+                       COALESCE(AVG(r.rating), 0) as avg_rating, COUNT(r.id) as review_count
+                FROM products p
+                LEFT JOIN categories c ON p.category_id = c.id
                 LEFT JOIN reviews r ON p.id = r.product_id AND r.status = 'approved'
                 WHERE p.slug = ? AND p.status = 'active'
-                GROUP BY p.id";
+                GROUP BY p.id, c.name, c.slug";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$slug]);
         return $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -117,14 +120,14 @@ class Product extends Model
     }
     public function getRelated($productId, $categoryId, $limit = 4)
     {
-        $sql = "SELECT p.*, pi.image_path as primary_image,
-                       AVG(r.rating) as avg_rating
-                FROM products p 
-                LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_primary = 1
+        $sql = "SELECT p.*,
+                       (SELECT pi.image_path FROM product_images pi WHERE pi.product_id = p.id AND pi.is_primary = 1 LIMIT 1) as primary_image,
+                       COALESCE(AVG(r.rating), 0) as avg_rating
+                FROM products p
                 LEFT JOIN reviews r ON p.id = r.product_id AND r.status = 'approved'
                 WHERE p.category_id = ? AND p.id != ? AND p.status = 'active'
                 GROUP BY p.id
-                ORDER BY RAND() 
+                ORDER BY RAND()
                 LIMIT ?";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$categoryId, $productId, $limit]);
@@ -132,14 +135,14 @@ class Product extends Model
     }
     public function getFeatured($limit = 8)
     {
-        $sql = "SELECT p.*, pi.image_path as primary_image,
-                       AVG(r.rating) as avg_rating
-                FROM products p 
-                LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_primary = 1
+        $sql = "SELECT p.*,
+                       (SELECT pi.image_path FROM product_images pi WHERE pi.product_id = p.id AND pi.is_primary = 1 LIMIT 1) as primary_image,
+                       COALESCE(AVG(r.rating), 0) as avg_rating
+                FROM products p
                 LEFT JOIN reviews r ON p.id = r.product_id AND r.status = 'approved'
                 WHERE p.featured = 1 AND p.status = 'active'
                 GROUP BY p.id
-                ORDER BY p.created_at DESC 
+                ORDER BY p.created_at DESC
                 LIMIT ?";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$limit]);
@@ -190,24 +193,58 @@ class Product extends Model
     public function search($query, $limit = PRODUCTS_PER_PAGE, $offset = 0)
     {
         $searchTerm = '%' . $query . '%';
-        $sql = "SELECT p.*, c.name as category_name, pi.image_path as primary_image,
-                       AVG(r.rating) as avg_rating,
+        $sql = "SELECT p.*, c.name as category_name,
+                       (SELECT pi.image_path FROM product_images pi WHERE pi.product_id = p.id AND pi.is_primary = 1 LIMIT 1) as primary_image,
+                       COALESCE(AVG(r.rating), 0) as avg_rating,
                        MATCH(p.name, p.description) AGAINST(? IN NATURAL LANGUAGE MODE) as relevance
-                FROM products p 
-                LEFT JOIN categories c ON p.category_id = c.id 
-                LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_primary = 1
+                FROM products p
+                LEFT JOIN categories c ON p.category_id = c.id
                 LEFT JOIN reviews r ON p.id = r.product_id AND r.status = 'approved'
                 WHERE p.status = 'active' AND (
-                    p.name LIKE ? OR 
-                    p.description LIKE ? OR 
+                    p.name LIKE ? OR
+                    p.description LIKE ? OR
                     p.sku LIKE ? OR
                     MATCH(p.name, p.description) AGAINST(? IN NATURAL LANGUAGE MODE)
                 )
-                GROUP BY p.id
+                GROUP BY p.id, c.name
                 ORDER BY relevance DESC, p.name ASC
                 LIMIT ? OFFSET ?";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$query, $searchTerm, $searchTerm, $searchTerm, $query, $limit, $offset]);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function countProducts($filters = [])
+    {
+        $sql = "SELECT COUNT(DISTINCT p.id) FROM products p
+                LEFT JOIN categories c ON p.category_id = c.id
+                WHERE p.status = 'active'";
+        $params = [];
+
+        if (!empty($filters['category_id'])) {
+            $sql .= " AND p.category_id = ?";
+            $params[] = $filters['category_id'];
+        }
+        if (!empty($filters['search'])) {
+            $sql .= " AND (p.name LIKE ? OR p.description LIKE ?)";
+            $searchTerm = '%' . $filters['search'] . '%';
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+        }
+        if (!empty($filters['min_price'])) {
+            $sql .= " AND p.price >= ?";
+            $params[] = $filters['min_price'];
+        }
+        if (!empty($filters['max_price'])) {
+            $sql .= " AND p.price <= ?";
+            $params[] = $filters['max_price'];
+        }
+        if (!empty($filters['featured'])) {
+            $sql .= " AND p.featured = 1";
+        }
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchColumn();
     }
 }
