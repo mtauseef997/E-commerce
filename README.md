@@ -30,3 +30,4 @@ A modern, responsive e-commerce platform built with PHP using MVC architecture.
 ## License
 
 MIT License
+# E-commerce
