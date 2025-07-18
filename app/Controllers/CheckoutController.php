@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Controllers;
+
 use App\Core\Controller;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\User;
+
 class CheckoutController extends Controller
 {
     private $productModel;
@@ -165,11 +168,22 @@ class CheckoutController extends Controller
             'notes' => $notes
         ];
         try {
+            // Debug logging
+            error_log('CheckoutController::process - About to create order');
+            error_log('Order data: ' . print_r($orderData, true));
+            error_log('Order items: ' . print_r($orderItems, true));
+
             $orderId = $this->orderModel->createOrder($orderData, $orderItems);
+
+            error_log('CheckoutController::process - Order created with ID: ' . $orderId);
+
             $this->setCart([]);
             $this->redirect('/checkout/success?order=' . $orderId);
         } catch (\Exception $e) {
-            $this->setFlash('error', 'Failed to process order. Please try again.');
+            error_log('CheckoutController::process - Error: ' . $e->getMessage());
+            error_log('CheckoutController::process - Stack trace: ' . $e->getTraceAsString());
+
+            $this->setFlash('error', 'Failed to process order: ' . $e->getMessage());
             $this->redirect('/checkout');
         }
     }

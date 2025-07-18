@@ -1,10 +1,13 @@
 <?php
+
 namespace App\Controllers;
+
 use App\Core\Controller;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\User;
+
 class AdminController extends Controller
 {
     private $productModel;

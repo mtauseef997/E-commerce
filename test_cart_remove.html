@@ -3,43 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Debug Cart Test</title>
+    <title>Test Cart Remove Functionality</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         button { padding: 10px 20px; margin: 10px; background: #007cba; color: white; border: none; cursor: pointer; }
         button:hover { background: #005a87; }
+        .remove-btn { background: #dc3545; }
+        .remove-btn:hover { background: #c82333; }
         .result { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 5px; }
         pre { background: #333; color: #fff; padding: 10px; border-radius: 3px; overflow-x: auto; }
     </style>
 </head>
 <body>
-    <h1>Debug Cart Test</h1>
+    <h1>Test Cart Remove Functionality</h1>
     
     <div>
-        <h3>Test Cart Endpoints:</h3>
-        <button onclick="testDebugCart()">Test Debug Cart (/debug_cart.php)</button>
-        <button onclick="testRealCart()">Test Real Cart (/cart/add)</button>
+        <h3>Test Cart Operations:</h3>
+        <button onclick="addTestProduct()">Add Test Product to Cart</button>
+        <button onclick="testRemoveProduct()" class="remove-btn">Remove Product from Cart</button>
+        <button onclick="testClearCart()" class="remove-btn">Clear Entire Cart</button>
+        <button onclick="viewCart()">View Cart</button>
         <button onclick="clearResults()">Clear Results</button>
     </div>
     
     <div id="results"></div>
     
     <script>
-        async function testDebugCart() {
-            await testEndpoint('/debug_cart.php', 'Debug Cart');
+        const testProductId = 1; // Use product ID 1 for testing
+        
+        async function addTestProduct() {
+            await testEndpoint('/cart/add', 'Add to Cart', {
+                product_id: testProductId,
+                quantity: 1
+            });
         }
         
-        async function testRealCart() {
-            await testEndpoint('/cart/add', 'Real Cart');
+        async function testRemoveProduct() {
+            await testEndpoint('/cart/remove', 'Remove from Cart', {
+                product_id: testProductId
+            });
         }
         
-        async function testEndpoint(url, name) {
+        async function testClearCart() {
+            await testEndpoint('/cart/clear', 'Clear Cart', {});
+        }
+        
+        async function viewCart() {
+            window.open('/cart', '_blank');
+        }
+        
+        async function testEndpoint(url, name, data) {
             const resultsDiv = document.getElementById('results');
             
             try {
                 const formData = new FormData();
-                formData.append('product_id', '1');
-                formData.append('quantity', '1');
+                Object.keys(data).forEach(key => {
+                    formData.append(key, data[key]);
+                });
                 
                 console.log(`Testing ${name} at ${url}`);
                 
@@ -68,6 +88,7 @@
                         <p><strong>URL:</strong> ${url}</p>
                         <p><strong>Status:</strong> ${response.status} ${response.statusText}</p>
                         <p><strong>Content-Type:</strong> ${contentType}</p>
+                        <p><strong>Data Sent:</strong> ${JSON.stringify(data)}</p>
                         <p><strong>Response:</strong></p>
                         <pre>${JSON.stringify(responseData, null, 2)}</pre>
                     </div>
@@ -97,7 +118,7 @@
         
         // Test on page load
         window.addEventListener('load', function() {
-            console.log('Page loaded, ready for testing');
+            console.log('Cart remove test page loaded');
         });
     </script>
 </body>

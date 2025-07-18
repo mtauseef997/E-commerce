@@ -335,10 +335,12 @@ const App = {
 
         // Remove from cart
         document.addEventListener('click', (e) => {
-            if (e.target.matches('.remove-item-btn') || e.target.closest('.remove-item-btn')) {
+            // Handle both .remove-item and .remove-item-btn classes
+            if (e.target.matches('.remove-item-btn, .remove-item') || e.target.closest('.remove-item-btn, .remove-item')) {
                 e.preventDefault();
-                const btn = e.target.matches('.remove-item-btn') ? e.target : e.target.closest('.remove-item-btn');
+                const btn = e.target.matches('.remove-item-btn, .remove-item') ? e.target : e.target.closest('.remove-item-btn, .remove-item');
                 const productId = btn.dataset.productId;
+                console.log('Remove button clicked for product:', productId);
                 if (confirm('Are you sure you want to remove this item from your cart?')) {
                     this.removeFromCart(productId);
                 }
@@ -445,10 +447,19 @@ const App = {
             if (data.success) {
                 this.showNotification(data.message, 'success');
                 this.updateCartCount(data.cart_count);
-                // Remove the cart item from DOM
-                const cartItem = document.querySelector(`[data-product-id="${productId}"]`);
+                // Remove the cart item from DOM - look for cart item container
+                const cartItem = document.querySelector(`.cart-item[data-product-id="${productId}"], .item-row[data-product-id="${productId}"]`);
                 if (cartItem) {
-                    cartItem.remove();
+                    cartItem.style.transition = 'opacity 0.3s ease';
+                    cartItem.style.opacity = '0';
+                    setTimeout(() => {
+                        cartItem.remove();
+                        // Check if cart is empty and reload page if needed
+                        const remainingItems = document.querySelectorAll('.cart-item, .item-row');
+                        if (remainingItems.length === 0) {
+                            window.location.reload();
+                        }
+                    }, 300);
                 }
                 // Update cart total
                 if (data.cart_total !== undefined) {
@@ -509,6 +520,84 @@ window.quickView = function (productId) {
 };
 
 window.toggleWishlist = function (productId) {
-    // Implement wishlist functionality
-    console.log('Toggle wishlist for product:', productId);
+    fetch('/wishlist/toggle', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: `product_id=${productId}`
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update wishlist button state
+                const wishlistBtns = document.querySelectorAll(`[data-product-id="${productId}"] .wishlist-btn, .wishlist-btn[data-product-id="${productId}"]`);
+                wishlistBtns.forEach(btn => {
+                    const icon = btn.querySelector('i');
+                    if (data.is_in_wishlist) {
+                        btn.classList.add('active');
+                        if (icon) icon.className = 'fas fa-heart';
+                        btn.title = 'Remove from Wishlist';
+                    } else {
+                        btn.classList.remove('active');
+                        if (icon) icon.className = 'far fa-heart';
+                        btn.title = 'Add to Wishlist';
+                    }
+                });
+
+                // Update wishlist count if element exists
+                const wishlistCountElements = document.querySelectorAll('.wishlist-count');
+                wishlistCountElements.forEach(element => {
+                    element.textContent = data.wishlist_count;
+                });
+
+                // Show notification
+                if (window.App && window.App.showNotification) {
+                    window.App.showNotification(data.message, 'success');
+                }
+            } else {
+                if (data.message.includes('login')) {
+                    // Redirect to login if not authenticated
+                    window.location.href = '/login';
+                } else {
+                    alert(data.message);
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Wishlist toggle error:', error);
+            alert('Failed to update wishlist. Please try again.');
+        });
+};
+
+window.removeFromCart = function (productId) {
+    if (confirm('Are you sure you want to remove this item from your cart?')) {
+        App.removeFromCart(productId);
+    }
+};
+
+window.clearCart = function () {
+    if (confirm('Are you sure you want to clear your entire cart?')) {
+        // Implement clear cart functionality
+        fetch('/cart/clear', {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    alert('Failed to clear cart. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Clear cart error:', error);
+                alert('Failed to clear cart. Please try again.');
+            });
+    }
 };

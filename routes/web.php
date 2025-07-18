@@ -63,7 +63,14 @@ $router->post('/cart/remove', 'CartController@remove');
 $router->get('/cart/clear', 'CartController@clear');
 $router->get('/checkout', 'CheckoutController@index');
 $router->post('/checkout', 'CheckoutController@process');
+$router->post('/checkout/process', 'CheckoutController@process');
 $router->get('/checkout/success', 'CheckoutController@success');
+// Wishlist routes
+$router->get('/wishlist', 'WishlistController@index');
+$router->post('/wishlist/add', 'WishlistController@add');
+$router->post('/wishlist/remove', 'WishlistController@remove');
+$router->post('/wishlist/toggle', 'WishlistController@toggle');
+$router->post('/wishlist/clear', 'WishlistController@clear');
 $router->get('/admin', 'AdminController@dashboard');
 $router->get('/admin/products', 'AdminController@products');
 $router->get('/admin/product/create', 'AdminController@createProduct');
