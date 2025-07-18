@@ -123,7 +123,38 @@
                             Categories <i class="fas fa-chevron-down"></i>
                         </a>
                         <div class="dropdown-menu mega-menu" id="categories-dropdown">
-                            <!-- Categories will be loaded here -->
+                            <?php if (!empty($navigation_categories)): ?>
+                                <div class="categories-grid">
+                                    <?php foreach ($navigation_categories as $category): ?>
+                                        <div class="category-item">
+                                            <a href="<?= $this->url('/category/' . $category['slug']) ?>" class="category-link">
+                                                <?php if ($category['image']): ?>
+                                                    <img src="<?= $this->asset('images/categories/' . $category['image']) ?>"
+                                                        alt="<?= $this->escape($category['name']) ?>" class="category-image">
+                                                <?php else: ?>
+                                                    <div class="category-icon">
+                                                        <i class="fas fa-folder"></i>
+                                                    </div>
+                                                <?php endif; ?>
+                                                <div class="category-info">
+                                                    <h4><?= $this->escape($category['name']) ?></h4>
+                                                    <span class="product-count"><?= $category['product_count'] ?> products</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                                <div class="dropdown-footer">
+                                    <a href="<?= $this->url('/products') ?>" class="view-all-btn">
+                                        <i class="fas fa-th-large"></i>
+                                        View All Products
+                                    </a>
+                                </div>
+                            <?php else: ?>
+                                <div class="empty-categories">
+                                    <p>No categories available</p>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </li>
                     <li class="nav-item">

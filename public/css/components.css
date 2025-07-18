@@ -1,6 +1,4 @@
-/* Component Styles */
 
-/* Buttons */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -97,7 +95,7 @@
     transform: none !important;
 }
 
-/* Form Elements */
+
 .form-group {
     margin-bottom: 1.5rem;
 }
@@ -146,7 +144,7 @@
     margin-top: 0.25rem;
 }
 
-/* Cards */
+
 .card {
     background: var(--bg-primary);
     border: 1px solid var(--border-color);
@@ -177,7 +175,6 @@
     background: var(--bg-secondary);
 }
 
-/* Product Card */
 .product-card {
     position: relative;
     background: var(--bg-primary);
@@ -351,7 +348,6 @@
     font-weight: 600;
 }
 
-/* Grid Layouts */
 .grid {
     display: grid;
     gap: 2rem;
@@ -369,7 +365,6 @@
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
-/* Pagination */
 .pagination {
     display: flex;
     justify-content: center;
@@ -403,7 +398,6 @@
     cursor: not-allowed;
 }
 
-/* Breadcrumb */
 .breadcrumb {
     display: flex;
     align-items: center;
@@ -425,7 +419,7 @@
     color: var(--text-light);
 }
 
-/* Tabs */
+
 .tabs {
     border-bottom: 1px solid var(--border-color);
     margin-bottom: 2rem;

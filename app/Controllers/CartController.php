@@ -51,6 +51,12 @@ class CartController extends Controller
         if (!$this->request->isPost()) {
             $this->redirect('/cart');
         }
+
+        // Debug logging
+        error_log('CartController::add called');
+        error_log('POST data: ' . print_r($_POST, true));
+        error_log('Is AJAX: ' . ($this->request->isAjax() ? 'yes' : 'no'));
+
         $productId = (int) $this->request->post('product_id');
         $quantity = (int) $this->request->post('quantity', 1);
         if ($quantity <= 0) {

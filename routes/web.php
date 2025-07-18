@@ -48,6 +48,13 @@ $router->get('/logout', 'AuthController@logout');
 $router->get('/profile', 'UserController@profile');
 $router->post('/profile', 'UserController@updateProfile');
 $router->get('/orders', 'UserController@orders');
+// Pages routes
+$router->get('/about', 'PagesController@about');
+$router->get('/contact', 'PagesController@contact');
+$router->post('/contact', 'PagesController@contact');
+$router->get('/privacy', 'PagesController@privacy');
+$router->get('/terms', 'PagesController@terms');
+$router->get('/faq', 'PagesController@faq');
 $router->get('/order/{id}', 'UserController@orderDetails');
 $router->get('/cart', 'CartController@index');
 $router->post('/cart/add', 'CartController@add');

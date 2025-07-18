@@ -14,154 +14,154 @@
 </div>
 
 <?php if ($success): ?>
-    <div class="alert alert-success">
-        <i class="fas fa-check-circle"></i>
-        <?= $this->escape($success) ?>
-    </div>
+<div class="alert alert-success">
+    <i class="fas fa-check-circle"></i>
+    <?= $this->escape($success) ?>
+</div>
 <?php endif; ?>
 
 <?php if ($error): ?>
-    <div class="alert alert-error">
-        <i class="fas fa-exclamation-circle"></i>
-        <?= $this->escape($error) ?>
-    </div>
+<div class="alert alert-error">
+    <i class="fas fa-exclamation-circle"></i>
+    <?= $this->escape($error) ?>
+</div>
 <?php endif; ?>
 
-<!-- Categories Management -->
+
 <div class="admin-table-container">
     <?php if (!empty($categories)): ?>
-        <div class="table-header">
-            <div class="table-info">
-                <span class="results-count">
-                    <?= count($categories) ?> categories found
-                </span>
-            </div>
-            <div class="table-actions">
-                <button class="btn btn-outline btn-sm" onclick="expandAll()">
-                    <i class="fas fa-expand-arrows-alt"></i>
-                    Expand All
-                </button>
-                <button class="btn btn-outline btn-sm" onclick="collapseAll()">
-                    <i class="fas fa-compress-arrows-alt"></i>
-                    Collapse All
-                </button>
-            </div>
+    <div class="table-header">
+        <div class="table-info">
+            <span class="results-count">
+                <?= count($categories) ?> categories found
+            </span>
         </div>
-        
-        <div class="categories-grid">
-            <?php foreach ($categories as $category): ?>
-                <div class="category-card" data-category-id="<?= $category['id'] ?>">
-                    <div class="category-header">
-                        <div class="category-info">
-                            <div class="category-image">
-                                <?php if ($category['image']): ?>
-                                    <img src="<?= $this->asset('images/categories/' . $category['image']) ?>" 
-                                         alt="<?= $this->escape($category['name']) ?>">
-                                <?php else: ?>
-                                    <div class="no-image">
-                                        <i class="fas fa-folder"></i>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                            <div class="category-details">
-                                <h3><?= $this->escape($category['name']) ?></h3>
-                                <p class="category-slug">
-                                    <i class="fas fa-link"></i>
-                                    <?= $this->escape($category['slug']) ?>
-                                </p>
-                                <?php if ($category['description']): ?>
-                                    <p class="category-description">
-                                        <?= $this->escape(substr($category['description'], 0, 100)) ?>
-                                        <?= strlen($category['description']) > 100 ? '...' : '' ?>
-                                    </p>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                        <div class="category-stats">
-                            <div class="stat-item">
-                                <span class="stat-value"><?= $category['product_count'] ?></span>
-                                <span class="stat-label">Products</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-value"><?= $category['sort_order'] ?></span>
-                                <span class="stat-label">Order</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="category-meta">
-                        <div class="category-status">
-                            <span class="status-badge status-<?= $category['status'] ?>">
-                                <?= ucfirst($category['status']) ?>
-                            </span>
-                            <?php if ($category['parent_id']): ?>
-                                <span class="badge badge-secondary">
-                                    <i class="fas fa-level-up-alt"></i>
-                                    Subcategory
-                                </span>
-                            <?php else: ?>
-                                <span class="badge badge-primary">
-                                    <i class="fas fa-folder"></i>
-                                    Main Category
-                                </span>
-                            <?php endif; ?>
-                        </div>
-                        <div class="category-dates">
-                            <small class="text-muted">
-                                Created: <?= $this->date($category['created_at'], 'M j, Y') ?>
-                            </small>
-                        </div>
-                    </div>
-                    
-                    <div class="category-actions">
-                        <a href="<?= $this->url('/category/' . $category['slug']) ?>" 
-                           class="btn btn-sm btn-outline" target="_blank" title="View Category">
-                            <i class="fas fa-eye"></i>
-                            View
-                        </a>
-                        <button onclick="editCategory(<?= $category['id'] ?>)" 
-                                class="btn btn-sm btn-primary" title="Edit Category">
-                            <i class="fas fa-edit"></i>
-                            Edit
-                        </button>
-                        <button onclick="addSubcategory(<?= $category['id'] ?>)" 
-                                class="btn btn-sm btn-secondary" title="Add Subcategory">
-                            <i class="fas fa-plus"></i>
-                            Sub
-                        </button>
-                        <?php if ($category['product_count'] == 0): ?>
-                            <button onclick="deleteCategory(<?= $category['id'] ?>)" 
-                                    class="btn btn-sm btn-danger" title="Delete Category">
-                                <i class="fas fa-trash"></i>
-                                Delete
-                            </button>
+        <div class="table-actions">
+            <button class="btn btn-outline btn-sm" onclick="expandAll()">
+                <i class="fas fa-expand-arrows-alt"></i>
+                Expand All
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="collapseAll()">
+                <i class="fas fa-compress-arrows-alt"></i>
+                Collapse All
+            </button>
+        </div>
+    </div>
+
+    <div class="categories-grid">
+        <?php foreach ($categories as $category): ?>
+        <div class="category-card" data-category-id="<?= $category['id'] ?>">
+            <div class="category-header">
+                <div class="category-info">
+                    <div class="category-image">
+                        <?php if ($category['image']): ?>
+                        <img src="<?= $this->asset('images/categories/' . $category['image']) ?>"
+                            alt="<?= $this->escape($category['name']) ?>">
                         <?php else: ?>
-                            <button class="btn btn-sm btn-danger" disabled title="Cannot delete category with products">
-                                <i class="fas fa-lock"></i>
-                                Locked
-                            </button>
+                        <div class="no-image">
+                            <i class="fas fa-folder"></i>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="category-details">
+                        <h3><?= $this->escape($category['name']) ?></h3>
+                        <p class="category-slug">
+                            <i class="fas fa-link"></i>
+                            <?= $this->escape($category['slug']) ?>
+                        </p>
+                        <?php if ($category['description']): ?>
+                        <p class="category-description">
+                            <?= $this->escape(substr($category['description'], 0, 100)) ?>
+                            <?= strlen($category['description']) > 100 ? '...' : '' ?>
+                        </p>
                         <?php endif; ?>
                     </div>
                 </div>
-            <?php endforeach; ?>
-        </div>
-        
-    <?php else: ?>
-        <div class="empty-state">
-            <div class="empty-icon">
-                <i class="fas fa-tags"></i>
+                <div class="category-stats">
+                    <div class="stat-item">
+                        <span class="stat-value"><?= $category['product_count'] ?></span>
+                        <span class="stat-label">Products</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value"><?= $category['sort_order'] ?></span>
+                        <span class="stat-label">Order</span>
+                    </div>
+                </div>
             </div>
-            <h3>No categories found</h3>
-            <p>Start organizing your products by creating your first category.</p>
-            <button class="btn btn-primary" onclick="showAddCategoryModal()">
-                <i class="fas fa-plus"></i>
-                Create First Category
-            </button>
+
+            <div class="category-meta">
+                <div class="category-status">
+                    <span class="status-badge status-<?= $category['status'] ?>">
+                        <?= ucfirst($category['status']) ?>
+                    </span>
+                    <?php if ($category['parent_id']): ?>
+                    <span class="badge badge-secondary">
+                        <i class="fas fa-level-up-alt"></i>
+                        Subcategory
+                    </span>
+                    <?php else: ?>
+                    <span class="badge badge-primary">
+                        <i class="fas fa-folder"></i>
+                        Main Category
+                    </span>
+                    <?php endif; ?>
+                </div>
+                <div class="category-dates">
+                    <small class="text-muted">
+                        Created: <?= $this->date($category['created_at'], 'M j, Y') ?>
+                    </small>
+                </div>
+            </div>
+
+            <div class="category-actions">
+                <a href="<?= $this->url('/category/' . $category['slug']) ?>" class="btn btn-sm btn-outline"
+                    target="_blank" title="View Category">
+                    <i class="fas fa-eye"></i>
+                    View
+                </a>
+                <button onclick="editCategory(<?= $category['id'] ?>)" class="btn btn-sm btn-primary"
+                    title="Edit Category">
+                    <i class="fas fa-edit"></i>
+                    Edit
+                </button>
+                <button onclick="addSubcategory(<?= $category['id'] ?>)" class="btn btn-sm btn-secondary"
+                    title="Add Subcategory">
+                    <i class="fas fa-plus"></i>
+                    Sub
+                </button>
+                <?php if ($category['product_count'] == 0): ?>
+                <button onclick="deleteCategory(<?= $category['id'] ?>)" class="btn btn-sm btn-danger"
+                    title="Delete Category">
+                    <i class="fas fa-trash"></i>
+                    Delete
+                </button>
+                <?php else: ?>
+                <button class="btn btn-sm btn-danger" disabled title="Cannot delete category with products">
+                    <i class="fas fa-lock"></i>
+                    Locked
+                </button>
+                <?php endif; ?>
+            </div>
         </div>
+        <?php endforeach; ?>
+    </div>
+
+    <?php else: ?>
+    <div class="empty-state">
+        <div class="empty-icon">
+            <i class="fas fa-tags"></i>
+        </div>
+        <h3>No categories found</h3>
+        <p>Start organizing your products by creating your first category.</p>
+        <button class="btn btn-primary" onclick="showAddCategoryModal()">
+            <i class="fas fa-plus"></i>
+            Create First Category
+        </button>
+    </div>
     <?php endif; ?>
 </div>
 
-<!-- Add/Edit Category Modal -->
+
 <div class="modal" id="categoryModal">
     <div class="modal-content">
         <div class="modal-header">
@@ -173,49 +173,50 @@
         <form id="categoryForm" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
             <input type="hidden" name="category_id" id="categoryId">
-            
+
             <div class="modal-body">
                 <div class="form-group">
                     <label for="categoryName">Category Name *</label>
                     <input type="text" id="categoryName" name="name" class="form-control" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="categorySlug">URL Slug</label>
                     <input type="text" id="categorySlug" name="slug" class="form-control">
                     <small class="form-help">Leave empty to auto-generate from name</small>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="categoryDescription">Description</label>
                     <textarea id="categoryDescription" name="description" class="form-control" rows="3"></textarea>
                 </div>
-                
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="parentCategory">Parent Category</label>
                         <select id="parentCategory" name="parent_id" class="form-control">
                             <option value="">None (Main Category)</option>
                             <?php foreach ($categories as $cat): ?>
-                                <?php if (!$cat['parent_id']): // Only show main categories ?>
-                                    <option value="<?= $cat['id'] ?>"><?= $this->escape($cat['name']) ?></option>
-                                <?php endif; ?>
+                            <?php if (!$cat['parent_id']): // Only show main categories 
+                                ?>
+                            <option value="<?= $cat['id'] ?>"><?= $this->escape($cat['name']) ?></option>
+                            <?php endif; ?>
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="sortOrder">Sort Order</label>
                         <input type="number" id="sortOrder" name="sort_order" class="form-control" value="0" min="0">
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="categoryImage">Category Image</label>
                     <input type="file" id="categoryImage" name="image" class="form-control" accept="image/*">
                     <small class="form-help">Recommended size: 400x300px</small>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="categoryStatus">Status</label>
                     <select id="categoryStatus" name="status" class="form-control">
@@ -224,7 +225,7 @@
                     </select>
                 </div>
             </div>
-            
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="closeCategoryModal()">
                     Cancel
@@ -455,16 +456,16 @@
     .categories-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .category-header {
         flex-direction: column;
     }
-    
+
     .category-stats {
         flex-direction: row;
         justify-content: space-around;
     }
-    
+
     .form-row {
         grid-template-columns: 1fr;
     }
@@ -486,7 +487,7 @@ function editCategory(categoryId) {
     document.getElementById('categoryForm').action = `/admin/categories/${categoryId}/edit`;
     document.getElementById('categoryId').value = categoryId;
     document.getElementById('categoryModal').classList.add('active');
-    
+
     // Here you would typically load the category data via AJAX
     console.log('Edit category:', categoryId);
 }
@@ -509,12 +510,12 @@ function deleteCategory(categoryId) {
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = `/admin/categories/${categoryId}/delete`;
-        
+
         const csrfToken = document.createElement('input');
         csrfToken.type = 'hidden';
         csrfToken.name = 'csrf_token';
         csrfToken.value = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        
+
         form.appendChild(csrfToken);
         document.body.appendChild(form);
         form.submit();
@@ -522,16 +523,15 @@ function deleteCategory(categoryId) {
 }
 
 function expandAll() {
-    // Implementation for expanding all categories
+
     console.log('Expand all categories');
 }
 
 function collapseAll() {
-    // Implementation for collapsing all categories
+
     console.log('Collapse all categories');
 }
 
-// Auto-generate slug from name
 document.getElementById('categoryName').addEventListener('input', function() {
     const name = this.value;
     const slug = name.toLowerCase()
@@ -540,7 +540,6 @@ document.getElementById('categoryName').addEventListener('input', function() {
     document.getElementById('categorySlug').value = slug;
 });
 
-// Close modal when clicking outside
 document.getElementById('categoryModal').addEventListener('click', function(e) {
     if (e.target === this) {
         closeCategoryModal();

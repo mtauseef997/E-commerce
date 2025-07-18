@@ -1,9 +1,4 @@
-/**
- * Main JavaScript File
- * Modern E-Commerce Application
- */
 
-// Global App Object
 const App = {
     init() {
         this.setupEventListeners();
@@ -12,14 +7,12 @@ const App = {
     },
 
     setupEventListeners() {
-        // DOM Content Loaded
         document.addEventListener('DOMContentLoaded', () => {
             this.hideLoadingScreen();
             this.initScrollReveal();
             this.initBackToTop();
         });
 
-        // Window Events
         window.addEventListener('scroll', this.handleScroll.bind(this));
         window.addEventListener('resize', this.handleResize.bind(this));
     },
@@ -30,10 +23,11 @@ const App = {
         this.initSearch();
         this.initAlerts();
         this.initTabs();
+        this.initCart();
     },
 
     handlePageLoad() {
-        // Add stagger animation to grid items
+
         const gridItems = document.querySelectorAll('.grid > *');
         if (gridItems.length > 0) {
             gridItems.forEach((item, index) => {
@@ -58,30 +52,27 @@ const App = {
     handleScroll() {
         const header = document.getElementById('header');
         const backToTop = document.getElementById('back-to-top');
-        
-        // Header scroll effect
+
+
         if (window.scrollY > 100) {
             header?.classList.add('scrolled');
         } else {
             header?.classList.remove('scrolled');
         }
 
-        // Back to top button
         if (window.scrollY > 500) {
             backToTop?.classList.add('visible');
         } else {
             backToTop?.classList.remove('visible');
         }
 
-        // Scroll reveal
         this.handleScrollReveal();
     },
 
     handleResize() {
-        // Close mobile menu on resize
         const mobileMenu = document.getElementById('main-nav');
         const mobileToggle = document.getElementById('mobile-menu-toggle');
-        
+
         if (window.innerWidth > 768) {
             mobileMenu?.classList.remove('active');
             mobileToggle?.classList.remove('active');
@@ -90,29 +81,27 @@ const App = {
 
     initDropdowns() {
         const dropdowns = document.querySelectorAll('.dropdown');
-        
+
         dropdowns.forEach(dropdown => {
             const toggle = dropdown.querySelector('.dropdown-toggle');
             const menu = dropdown.querySelector('.dropdown-menu');
-            
+
             if (toggle && menu) {
                 toggle.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    
-                    // Close other dropdowns
+
                     dropdowns.forEach(other => {
                         if (other !== dropdown) {
                             other.classList.remove('active');
                         }
                     });
-                    
+
                     dropdown.classList.toggle('active');
                 });
             }
         });
 
-        // Close dropdowns when clicking outside
         document.addEventListener('click', () => {
             dropdowns.forEach(dropdown => {
                 dropdown.classList.remove('active');
@@ -123,7 +112,7 @@ const App = {
     initMobileMenu() {
         const toggle = document.getElementById('mobile-menu-toggle');
         const menu = document.getElementById('main-nav');
-        
+
         if (toggle && menu) {
             toggle.addEventListener('click', () => {
                 toggle.classList.toggle('active');
@@ -135,13 +124,13 @@ const App = {
     initSearch() {
         const searchForm = document.querySelector('.search-form');
         const searchInput = document.querySelector('.search-input');
-        
+
         if (searchForm && searchInput) {
-            // Add search suggestions (placeholder for future enhancement)
+
             searchInput.addEventListener('input', (e) => {
                 const query = e.target.value.trim();
                 if (query.length > 2) {
-                    // TODO: Implement search suggestions
+
                 }
             });
         }
@@ -149,9 +138,9 @@ const App = {
 
     initAlerts() {
         const alerts = document.querySelectorAll('.alert');
-        
+
         alerts.forEach(alert => {
-            // Auto-hide alerts after 5 seconds
+
             setTimeout(() => {
                 if (alert.parentElement) {
                     alert.style.opacity = '0';
@@ -166,20 +155,20 @@ const App = {
 
     initTabs() {
         const tabLinks = document.querySelectorAll('.tab-link');
-        
+
         tabLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                
+
                 const targetId = link.getAttribute('href').substring(1);
                 const targetContent = document.getElementById(targetId);
-                
+
                 if (targetContent) {
-                    // Remove active class from all tabs and content
+
                     document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
                     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                    
-                    // Add active class to clicked tab and corresponding content
+
+
                     link.classList.add('active');
                     targetContent.classList.add('active');
                 }
@@ -189,7 +178,7 @@ const App = {
 
     initScrollReveal() {
         const revealElements = document.querySelectorAll('.scroll-reveal');
-        
+
         if (revealElements.length > 0) {
             this.handleScrollReveal();
         }
@@ -197,11 +186,11 @@ const App = {
 
     handleScrollReveal() {
         const revealElements = document.querySelectorAll('.scroll-reveal:not(.revealed)');
-        
+
         revealElements.forEach(element => {
             const elementTop = element.getBoundingClientRect().top;
             const elementVisible = 150;
-            
+
             if (elementTop < window.innerHeight - elementVisible) {
                 element.classList.add('revealed');
             }
@@ -210,7 +199,7 @@ const App = {
 
     initBackToTop() {
         const backToTop = document.getElementById('back-to-top');
-        
+
         if (backToTop) {
             backToTop.addEventListener('click', () => {
                 window.scrollTo({
@@ -221,7 +210,6 @@ const App = {
         }
     },
 
-    // Utility Functions
     showNotification(message, type = 'success') {
         const notification = document.createElement('div');
         notification.className = `alert alert-${type}`;
@@ -232,10 +220,9 @@ const App = {
                 <i class="fas fa-times"></i>
             </button>
         `;
-        
+
         document.body.insertBefore(notification, document.body.firstChild);
-        
-        // Auto-hide after 5 seconds
+
         setTimeout(() => {
             if (notification.parentElement) {
                 notification.style.opacity = '0';
@@ -257,15 +244,15 @@ const App = {
         };
 
         const config = { ...defaultOptions, ...options };
-        
+
         try {
             const response = await fetch(url, config);
             const data = await response.json();
-            
+
             if (!response.ok) {
                 throw new Error(data.message || 'Request failed');
             }
-            
+
             return data;
         } catch (error) {
             console.error('Request error:', error);
@@ -290,8 +277,238 @@ const App = {
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
         };
+    },
+
+    // Cart functionality
+    initCart() {
+        this.bindCartEvents();
+    },
+
+    bindCartEvents() {
+        // Add to cart buttons - multiple selectors for different button types
+        document.addEventListener('click', (e) => {
+            // Handle buttons with add-to-cart-btn class
+            if (e.target.matches('.add-to-cart-btn') || e.target.closest('.add-to-cart-btn')) {
+                e.preventDefault();
+                const btn = e.target.matches('.add-to-cart-btn') ? e.target : e.target.closest('.add-to-cart-btn');
+                const productId = btn.dataset.productId || btn.getAttribute('onclick')?.match(/addToCart\((\d+)\)/)?.[1];
+                const quantity = btn.dataset.quantity || 1;
+                if (productId) {
+                    console.log('Adding to cart via class:', productId, quantity);
+                    this.addToCart(productId, quantity);
+                }
+                return;
+            }
+
+            // Handle buttons with add-to-cart class (product detail page)
+            if (e.target.matches('.add-to-cart') || e.target.closest('.add-to-cart')) {
+                e.preventDefault();
+                const btn = e.target.matches('.add-to-cart') ? e.target : e.target.closest('.add-to-cart');
+                const productId = btn.dataset.productId;
+                const quantity = btn.dataset.quantity || 1;
+                if (productId) {
+                    console.log('Adding to cart via detail page:', productId, quantity);
+                    this.addToCart(productId, quantity);
+                }
+                return;
+            }
+        });
+
+        // Quantity controls in cart
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('.qty-btn') || e.target.closest('.qty-btn')) {
+                e.preventDefault();
+                const btn = e.target.matches('.qty-btn') ? e.target : e.target.closest('.qty-btn');
+                const action = btn.dataset.action;
+                const productId = btn.dataset.productId;
+                const quantityInput = btn.parentElement.querySelector('.qty-input');
+
+                if (action === 'increase') {
+                    quantityInput.value = parseInt(quantityInput.value) + 1;
+                } else if (action === 'decrease' && parseInt(quantityInput.value) > 1) {
+                    quantityInput.value = parseInt(quantityInput.value) - 1;
+                }
+
+                this.updateCartItem(productId, quantityInput.value);
+            }
+        });
+
+        // Remove from cart
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('.remove-item-btn') || e.target.closest('.remove-item-btn')) {
+                e.preventDefault();
+                const btn = e.target.matches('.remove-item-btn') ? e.target : e.target.closest('.remove-item-btn');
+                const productId = btn.dataset.productId;
+                if (confirm('Are you sure you want to remove this item from your cart?')) {
+                    this.removeFromCart(productId);
+                }
+            }
+        });
+    },
+
+    async addToCart(productId, quantity = 1) {
+        console.log('addToCart called with:', productId, quantity);
+
+        try {
+            // Get CSRF token
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            console.log('CSRF token:', csrfToken);
+
+            const formData = new FormData();
+            formData.append('product_id', productId);
+            formData.append('quantity', quantity);
+            if (csrfToken) {
+                formData.append('csrf_token', csrfToken);
+            }
+
+            console.log('Sending request to /cart/add');
+            const response = await fetch('/cart/add', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                const text = await response.text();
+                console.error('Non-JSON response:', text);
+                throw new Error('Server returned non-JSON response');
+            }
+
+            const data = await response.json();
+            console.log('Response data:', data);
+
+            if (data.success) {
+                this.showNotification(data.message, 'success');
+                this.updateCartCount(data.cart_count);
+            } else {
+                this.showNotification(data.message || 'Failed to add item to cart', 'error');
+            }
+        } catch (error) {
+            console.error('Add to cart error:', error);
+            this.showNotification('Failed to add item to cart. Please try again.', 'error');
+        }
+    },
+
+    async updateCartItem(productId, quantity) {
+        try {
+            const formData = new FormData();
+            formData.append('product_id', productId);
+            formData.append('quantity', quantity);
+
+            const response = await fetch('/cart/update', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                this.updateCartCount(data.cart_count);
+                this.updateCartTotals(data.item_total, data.cart_total);
+            } else {
+                this.showNotification(data.message, 'error');
+            }
+        } catch (error) {
+            console.error('Update cart error:', error);
+            this.showNotification('Failed to update cart. Please try again.', 'error');
+        }
+    },
+
+    async removeFromCart(productId) {
+        try {
+            const formData = new FormData();
+            formData.append('product_id', productId);
+
+            const response = await fetch('/cart/remove', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                this.showNotification(data.message, 'success');
+                this.updateCartCount(data.cart_count);
+                // Remove the cart item from DOM
+                const cartItem = document.querySelector(`[data-product-id="${productId}"]`);
+                if (cartItem) {
+                    cartItem.remove();
+                }
+                // Update cart total
+                if (data.cart_total !== undefined) {
+                    this.updateCartTotal(data.cart_total);
+                }
+            } else {
+                this.showNotification(data.message, 'error');
+            }
+        } catch (error) {
+            console.error('Remove from cart error:', error);
+            this.showNotification('Failed to remove item from cart. Please try again.', 'error');
+        }
+    },
+
+    updateCartCount(count) {
+        const cartCountElements = document.querySelectorAll('.cart-count');
+        cartCountElements.forEach(element => {
+            element.textContent = count;
+            if (count > 0) {
+                element.style.display = 'block';
+            } else {
+                element.style.display = 'none';
+            }
+        });
+    },
+
+    updateCartTotals(itemTotal, cartTotal) {
+        // Update item total if element exists
+        const itemTotalElement = document.querySelector('.item-total');
+        if (itemTotalElement && itemTotal !== undefined) {
+            itemTotalElement.textContent = this.formatCurrency(itemTotal);
+        }
+
+        // Update cart total
+        this.updateCartTotal(cartTotal);
+    },
+
+    updateCartTotal(total) {
+        const cartTotalElements = document.querySelectorAll('.cart-total');
+        cartTotalElements.forEach(element => {
+            element.textContent = this.formatCurrency(total);
+        });
     }
 };
 
-// Initialize App
+
 App.init();
+
+// Global functions for inline event handlers
+window.addToCart = function (productId, quantity = 1) {
+    App.addToCart(productId, quantity);
+};
+
+window.quickView = function (productId) {
+    // Implement quick view functionality
+    console.log('Quick view for product:', productId);
+    // You can implement a modal or redirect to product page
+};
+
+window.toggleWishlist = function (productId) {
+    // Implement wishlist functionality
+    console.log('Toggle wishlist for product:', productId);
+};

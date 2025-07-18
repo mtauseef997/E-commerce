@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Cart Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        button { padding: 10px 20px; margin: 10px; background: #007cba; color: white; border: none; cursor: pointer; }
+        button:hover { background: #005a87; }
+        .result { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        pre { background: #333; color: #fff; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Debug Cart Test</h1>
+    
+    <div>
+        <h3>Test Cart Endpoints:</h3>
+        <button onclick="testDebugCart()">Test Debug Cart (/debug_cart.php)</button>
+        <button onclick="testRealCart()">Test Real Cart (/cart/add)</button>
+        <button onclick="clearResults()">Clear Results</button>
+    </div>
+    
+    <div id="results"></div>
+    
+    <script>
+        async function testDebugCart() {
+            await testEndpoint('/debug_cart.php', 'Debug Cart');
+        }
+        
+        async function testRealCart() {
+            await testEndpoint('/cart/add', 'Real Cart');
+        }
+        
+        async function testEndpoint(url, name) {
+            const resultsDiv = document.getElementById('results');
+            
+            try {
+                const formData = new FormData();
+                formData.append('product_id', '1');
+                formData.append('quantity', '1');
+                
+                console.log(`Testing ${name} at ${url}`);
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                
+                console.log(`${name} Response:`, response);
+                
+                const contentType = response.headers.get('content-type');
+                let responseData;
+                
+                if (contentType && contentType.includes('application/json')) {
+                    responseData = await response.json();
+                } else {
+                    responseData = await response.text();
+                }
+                
+                const resultHtml = `
+                    <div class="result">
+                        <h4>${name} Result (${response.status})</h4>
+                        <p><strong>URL:</strong> ${url}</p>
+                        <p><strong>Status:</strong> ${response.status} ${response.statusText}</p>
+                        <p><strong>Content-Type:</strong> ${contentType}</p>
+                        <p><strong>Response:</strong></p>
+                        <pre>${JSON.stringify(responseData, null, 2)}</pre>
+                    </div>
+                `;
+                
+                resultsDiv.innerHTML += resultHtml;
+                
+            } catch (error) {
+                console.error(`${name} Error:`, error);
+                
+                const errorHtml = `
+                    <div class="result" style="border-left: 5px solid red;">
+                        <h4>${name} Error</h4>
+                        <p><strong>URL:</strong> ${url}</p>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <pre>${error.stack}</pre>
+                    </div>
+                `;
+                
+                resultsDiv.innerHTML += errorHtml;
+            }
+        }
+        
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        // Test on page load
+        window.addEventListener('load', function() {
+            console.log('Page loaded, ready for testing');
+        });
+    </script>
+</body>
+</html>

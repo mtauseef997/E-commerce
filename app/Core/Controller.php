@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Core;
+
 abstract class Controller
 {
     protected $view;
@@ -13,7 +15,8 @@ abstract class Controller
     {
         $data['current_user'] = $this->getCurrentUser();
         $data['cart_count'] = $this->getCartCount();
-        $data['csrf_token'] = $this->generateCsrfToken();
+        $data['csrf_token'] = $this->generateCsrf();
+        $data['navigation_categories'] = $this->getNavigationCategories();
         return $this->view->render($template, $data, $layout);
     }
     protected function redirect($url, $statusCode = 302)
@@ -103,5 +106,15 @@ abstract class Controller
             $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
         }
         return $_SESSION['csrf_token'];
+    }
+
+    protected function getNavigationCategories()
+    {
+        try {
+            $categoryModel = new \App\Models\Category();
+            return $categoryModel->getWithProductCount();
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 }
