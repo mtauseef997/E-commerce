@@ -56,6 +56,7 @@ $router->get('/privacy', 'PagesController@privacy');
 $router->get('/terms', 'PagesController@terms');
 $router->get('/faq', 'PagesController@faq');
 $router->get('/order/{id}', 'UserController@orderDetails');
+$router->post('/orders/{id}/cancel', 'UserController@cancelOrder');
 $router->get('/cart', 'CartController@index');
 $router->post('/cart/add', 'CartController@add');
 $router->post('/cart/update', 'CartController@update');

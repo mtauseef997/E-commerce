@@ -1,8 +1,11 @@
 <?php
+
 namespace App\Controllers;
+
 use App\Core\Controller;
 use App\Models\User;
 use App\Models\Order;
+
 class UserController extends Controller
 {
     private $userModel;
@@ -117,9 +120,85 @@ class UserController extends Controller
         $this->render('user/order-details', [
             'title' => 'Order #' . $order['order_number'],
             'order' => $order,
+            'order_items' => $order['items'],
             'success' => $this->getFlash('success'),
             'error' => $this->getFlash('error')
         ]);
+    }
+
+    public function cancelOrder($id)
+    {
+        if (!$this->request->isPost()) {
+            if ($this->request->isAjax()) {
+                return $this->json([
+                    'success' => false,
+                    'message' => 'Invalid request method.'
+                ]);
+            }
+            $this->redirect('/orders');
+        }
+
+        $userId = $this->getCurrentUserId();
+
+        try {
+            // Get the order and verify ownership
+            $order = $this->orderModel->find($id);
+            if (!$order || $order['user_id'] != $userId) {
+                if ($this->request->isAjax()) {
+                    return $this->json([
+                        'success' => false,
+                        'message' => 'Order not found.'
+                    ]);
+                }
+                $this->setFlash('error', 'Order not found.');
+                $this->redirect('/orders');
+            }
+
+            // Check if order can be cancelled
+            if (!in_array($order['status'], ['pending', 'processing'])) {
+                if ($this->request->isAjax()) {
+                    return $this->json([
+                        'success' => false,
+                        'message' => 'This order cannot be cancelled. It has already been processed or shipped.'
+                    ]);
+                }
+                $this->setFlash('error', 'This order cannot be cancelled. It has already been processed or shipped.');
+                $this->redirect('/orders/' . $id);
+            }
+
+            // Cancel the order
+            $result = $this->orderModel->cancelOrder($id);
+
+            if ($result) {
+                if ($this->request->isAjax()) {
+                    return $this->json([
+                        'success' => true,
+                        'message' => 'Order has been cancelled successfully.'
+                    ]);
+                }
+                $this->setFlash('success', 'Order has been cancelled successfully.');
+            } else {
+                if ($this->request->isAjax()) {
+                    return $this->json([
+                        'success' => false,
+                        'message' => 'Failed to cancel order. Please try again.'
+                    ]);
+                }
+                $this->setFlash('error', 'Failed to cancel order. Please try again.');
+            }
+        } catch (\Exception $e) {
+            error_log('UserController::cancelOrder - Error: ' . $e->getMessage());
+
+            if ($this->request->isAjax()) {
+                return $this->json([
+                    'success' => false,
+                    'message' => 'An error occurred while cancelling the order.'
+                ]);
+            }
+            $this->setFlash('error', 'An error occurred while cancelling the order.');
+        }
+
+        $this->redirect('/orders/' . $id);
     }
     public function wishlist()
     {

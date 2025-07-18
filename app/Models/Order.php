@@ -1,13 +1,26 @@
 <?php
+
 namespace App\Models;
+
 use App\Core\Model;
+
 class Order extends Model
 {
     protected $table = 'orders';
     protected $fillable = [
-        'user_id', 'order_number', 'status', 'total_amount', 'subtotal', 
-        'tax_amount', 'shipping_amount', 'discount_amount', 'payment_method', 
-        'payment_status', 'billing_address', 'shipping_address', 'notes'
+        'user_id',
+        'order_number',
+        'status',
+        'total_amount',
+        'subtotal',
+        'tax_amount',
+        'shipping_amount',
+        'discount_amount',
+        'payment_method',
+        'payment_status',
+        'billing_address',
+        'shipping_address',
+        'notes'
     ];
     public function createOrder($orderData, $items)
     {
@@ -148,5 +161,99 @@ class Order extends Model
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function cancelOrder($orderId)
+    {
+        try {
+            $this->beginTransaction();
+
+            // Get the order first to check current status
+            $order = $this->find($orderId);
+            if (!$order) {
+                throw new \Exception('Order not found');
+            }
+
+            // Check if order can be cancelled
+            if (!in_array($order['status'], ['pending', 'processing'])) {
+                throw new \Exception('Order cannot be cancelled. Current status: ' . $order['status']);
+            }
+
+            // Update order status to cancelled
+            $stmt = $this->db->prepare("
+                UPDATE {$this->table}
+                SET status = 'cancelled', updated_at = NOW()
+                WHERE id = ?
+            ");
+
+            $result = $stmt->execute([$orderId]);
+
+            if (!$result) {
+                throw new \Exception('Failed to update order status');
+            }
+
+            // Restore stock for cancelled order items
+            $this->restoreStockForOrder($orderId);
+
+            $this->commit();
+            return true;
+        } catch (\Exception $e) {
+            $this->rollback();
+            error_log('Order::cancelOrder - Error: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    private function restoreStockForOrder($orderId)
+    {
+        try {
+            // Get order items
+            $stmt = $this->db->prepare("
+                SELECT product_id, quantity
+                FROM order_items
+                WHERE order_id = ?
+            ");
+
+            $stmt->execute([$orderId]);
+            $items = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+            // Restore stock for each item
+            foreach ($items as $item) {
+                $updateStmt = $this->db->prepare("
+                    UPDATE products
+                    SET stock_quantity = stock_quantity + ?,
+                        stock_status = CASE
+                            WHEN stock_quantity + ? > 0 THEN 'in_stock'
+                            ELSE stock_status
+                        END,
+                        updated_at = NOW()
+                    WHERE id = ?
+                ");
+
+                $updateStmt->execute([
+                    $item['quantity'],
+                    $item['quantity'],
+                    $item['product_id']
+                ]);
+            }
+        } catch (\Exception $e) {
+            error_log('Order::restoreStockForOrder - Error: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    public function canBeCancelled($orderId)
+    {
+        try {
+            $order = $this->find($orderId);
+            if (!$order) {
+                return false;
+            }
+
+            return in_array($order['status'], ['pending', 'processing']);
+        } catch (\Exception $e) {
+            error_log('Order::canBeCancelled - Error: ' . $e->getMessage());
+            return false;
+        }
     }
 }
