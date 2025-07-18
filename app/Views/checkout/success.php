@@ -1,14 +1,14 @@
 <div class="success-page">
     <div class="container">
         <div class="success-content">
-            <!-- Success Icon -->
+
             <div class="success-icon">
                 <div class="icon-circle">
                     <i class="fas fa-check"></i>
                 </div>
             </div>
 
-            <!-- Success Message -->
+
             <div class="success-message">
                 <h1>Order Placed Successfully!</h1>
                 <p class="success-subtitle">
@@ -16,7 +16,6 @@
                 </p>
             </div>
 
-            <!-- Order Details -->
             <div class="order-details">
                 <div class="order-header">
                     <h2>Order Details</h2>
@@ -27,21 +26,21 @@
                 </div>
 
                 <div class="order-info-grid">
-                    <!-- Order Summary -->
+
                     <div class="order-summary-card">
                         <h3>Order Summary</h3>
                         <div class="order-items">
                             <?php foreach ($order['items'] as $item): ?>
-                                <div class="order-item">
-                                    <div class="item-details">
-                                        <h4><?= $this->escape($item['product_name']) ?></h4>
-                                        <p class="item-sku">SKU: <?= $this->escape($item['product_sku']) ?></p>
-                                        <p class="item-quantity">Quantity: <?= $item['quantity'] ?></p>
-                                    </div>
-                                    <div class="item-price">
-                                        $<?= number_format($item['total'], 2) ?>
-                                    </div>
+                            <div class="order-item">
+                                <div class="item-details">
+                                    <h4><?= $this->escape($item['product_name']) ?></h4>
+                                    <p class="item-sku">SKU: <?= $this->escape($item['product_sku']) ?></p>
+                                    <p class="item-quantity">Quantity: <?= $item['quantity'] ?></p>
                                 </div>
+                                <div class="item-price">
+                                    $<?= number_format($item['total'], 2) ?>
+                                </div>
+                            </div>
                             <?php endforeach; ?>
                         </div>
 
@@ -65,11 +64,10 @@
                         </div>
                     </div>
 
-                    <!-- Shipping & Billing -->
                     <div class="addresses-card">
                         <h3>Shipping & Billing Information</h3>
-                        
-                        <?php 
+
+                        <?php
                         $billingAddress = json_decode($order['billing_address'], true);
                         $shippingAddress = json_decode($order['shipping_address'], true);
                         ?>
@@ -80,22 +78,23 @@
                                 Shipping Address
                             </h4>
                             <div class="address">
-                                <p><strong><?= $this->escape($shippingAddress['first_name'] . ' ' . $shippingAddress['last_name']) ?></strong></p>
+                                <p><strong><?= $this->escape($shippingAddress['first_name'] . ' ' . $shippingAddress['last_name']) ?></strong>
+                                </p>
                                 <?php if ($shippingAddress['company']): ?>
-                                    <p><?= $this->escape($shippingAddress['company']) ?></p>
+                                <p><?= $this->escape($shippingAddress['company']) ?></p>
                                 <?php endif; ?>
                                 <p><?= $this->escape($shippingAddress['address_line_1']) ?></p>
                                 <?php if ($shippingAddress['address_line_2']): ?>
-                                    <p><?= $this->escape($shippingAddress['address_line_2']) ?></p>
+                                <p><?= $this->escape($shippingAddress['address_line_2']) ?></p>
                                 <?php endif; ?>
                                 <p>
-                                    <?= $this->escape($shippingAddress['city']) ?>, 
-                                    <?= $this->escape($shippingAddress['state']) ?> 
+                                    <?= $this->escape($shippingAddress['city']) ?>,
+                                    <?= $this->escape($shippingAddress['state']) ?>
                                     <?= $this->escape($shippingAddress['postal_code']) ?>
                                 </p>
                                 <p><?= $this->escape($shippingAddress['country']) ?></p>
                                 <?php if ($shippingAddress['phone']): ?>
-                                    <p>Phone: <?= $this->escape($shippingAddress['phone']) ?></p>
+                                <p>Phone: <?= $this->escape($shippingAddress['phone']) ?></p>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -106,31 +105,31 @@
                                 Billing Address
                             </h4>
                             <div class="address">
-                                <p><strong><?= $this->escape($billingAddress['first_name'] . ' ' . $billingAddress['last_name']) ?></strong></p>
+                                <p><strong><?= $this->escape($billingAddress['first_name'] . ' ' . $billingAddress['last_name']) ?></strong>
+                                </p>
                                 <?php if ($billingAddress['company']): ?>
-                                    <p><?= $this->escape($billingAddress['company']) ?></p>
+                                <p><?= $this->escape($billingAddress['company']) ?></p>
                                 <?php endif; ?>
                                 <p><?= $this->escape($billingAddress['address_line_1']) ?></p>
                                 <?php if ($billingAddress['address_line_2']): ?>
-                                    <p><?= $this->escape($billingAddress['address_line_2']) ?></p>
+                                <p><?= $this->escape($billingAddress['address_line_2']) ?></p>
                                 <?php endif; ?>
                                 <p>
-                                    <?= $this->escape($billingAddress['city']) ?>, 
-                                    <?= $this->escape($billingAddress['state']) ?> 
+                                    <?= $this->escape($billingAddress['city']) ?>,
+                                    <?= $this->escape($billingAddress['state']) ?>
                                     <?= $this->escape($billingAddress['postal_code']) ?>
                                 </p>
                                 <p><?= $this->escape($billingAddress['country']) ?></p>
                                 <?php if ($billingAddress['phone']): ?>
-                                    <p>Phone: <?= $this->escape($billingAddress['phone']) ?></p>
+                                <p>Phone: <?= $this->escape($billingAddress['phone']) ?></p>
                                 <?php endif; ?>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Payment & Status -->
                     <div class="payment-status-card">
                         <h3>Payment & Status</h3>
-                        
+
                         <div class="status-info">
                             <div class="status-item">
                                 <span class="status-label">Order Status:</span>
@@ -138,14 +137,14 @@
                                     <?= ucfirst($order['status']) ?>
                                 </span>
                             </div>
-                            
+
                             <div class="status-item">
                                 <span class="status-label">Payment Status:</span>
                                 <span class="status-badge payment-<?= $order['payment_status'] ?>">
                                     <?= ucfirst(str_replace('_', ' ', $order['payment_status'])) ?>
                                 </span>
                             </div>
-                            
+
                             <div class="status-item">
                                 <span class="status-label">Payment Method:</span>
                                 <span class="payment-method">
@@ -162,16 +161,15 @@
                         </div>
 
                         <?php if ($order['notes']): ?>
-                            <div class="order-notes">
-                                <h4>Order Notes</h4>
-                                <p><?= $this->escape($order['notes']) ?></p>
-                            </div>
+                        <div class="order-notes">
+                            <h4>Order Notes</h4>
+                            <p><?= $this->escape($order['notes']) ?></p>
+                        </div>
                         <?php endif; ?>
                     </div>
                 </div>
             </div>
 
-            <!-- Next Steps -->
             <div class="next-steps">
                 <h3>What's Next?</h3>
                 <div class="steps-grid">
@@ -184,7 +182,7 @@
                             <p>You'll receive an order confirmation email shortly with all the details.</p>
                         </div>
                     </div>
-                    
+
                     <div class="step-item">
                         <div class="step-icon">
                             <i class="fas fa-box"></i>
@@ -194,7 +192,7 @@
                             <p>We'll start processing your order and prepare it for shipment.</p>
                         </div>
                     </div>
-                    
+
                     <div class="step-item">
                         <div class="step-icon">
                             <i class="fas fa-truck"></i>
@@ -207,7 +205,6 @@
                 </div>
             </div>
 
-            <!-- Action Buttons -->
             <div class="success-actions">
                 <a href="<?= $this->url('/orders') ?>" class="btn btn-primary">
                     <i class="fas fa-list"></i>
@@ -227,7 +224,6 @@
 </div>
 
 <style>
-/* Success Page Styles */
 .success-page {
     padding: 4rem 0;
     background: var(--bg-secondary);
@@ -240,7 +236,7 @@
     text-align: center;
 }
 
-/* Success Icon */
+
 .success-icon {
     margin-bottom: 2rem;
 }
@@ -263,12 +259,22 @@
 }
 
 @keyframes successPulse {
-    0% { transform: scale(0.8); opacity: 0; }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); opacity: 1; }
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
-/* Success Message */
+
 .success-message {
     margin-bottom: 3rem;
 }
@@ -286,7 +292,8 @@
     margin: 0 auto;
 }
 
-/* Order Details */
+
+
 .order-details {
     background: var(--bg-primary);
     border-radius: var(--radius-lg);
@@ -334,7 +341,7 @@
     gap: 2rem;
 }
 
-/* Order Summary Card */
+
 .order-summary-card {
     background: var(--bg-secondary);
     border-radius: var(--radius-md);
@@ -395,7 +402,7 @@
     border-top: 1px solid var(--border-color);
 }
 
-/* Addresses Card */
+
 .addresses-card {
     background: var(--bg-secondary);
     border-radius: var(--radius-md);
@@ -430,7 +437,6 @@
     line-height: 1.5;
 }
 
-/* Payment Status Card */
 .payment-status-card {
     grid-column: 1 / -1;
     background: var(--bg-secondary);
@@ -471,14 +477,40 @@
     width: fit-content;
 }
 
-.status-pending { background: #fef3c7; color: #92400e; }
-.status-processing { background: #dbeafe; color: #1e40af; }
-.status-shipped { background: #d1fae5; color: #065f46; }
-.status-delivered { background: #dcfce7; color: #166534; }
+.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
 
-.payment-pending { background: #fef3c7; color: #92400e; }
-.payment-paid { background: #dcfce7; color: #166534; }
-.payment-failed { background: #fee2e2; color: #991b1b; }
+.status-processing {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-shipped {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-delivered {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.payment-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.payment-paid {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.payment-failed {
+    background: #fee2e2;
+    color: #991b1b;
+}
 
 .payment-method {
     font-weight: 500;
@@ -500,7 +532,6 @@
     line-height: 1.6;
 }
 
-/* Next Steps */
 .next-steps {
     margin-bottom: 3rem;
 }
@@ -550,7 +581,6 @@
     line-height: 1.5;
 }
 
-/* Success Actions */
 .success-actions {
     display: flex;
     justify-content: center;
@@ -558,40 +588,39 @@
     flex-wrap: wrap;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .success-page {
         padding: 2rem 0;
     }
-    
+
     .success-message h1 {
         font-size: 2rem;
     }
-    
+
     .order-info-grid {
         grid-template-columns: 1fr;
         gap: 1.5rem;
     }
-    
+
     .order-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
     }
-    
+
     .order-meta {
         align-items: flex-start;
     }
-    
+
     .steps-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .success-actions {
         flex-direction: column;
         align-items: center;
     }
-    
+
     .success-actions .btn {
         width: 100%;
         max-width: 300px;

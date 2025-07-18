@@ -37,7 +37,6 @@ class ApiController extends Controller
             $this->json(['success' => false, 'message' => 'Please login to use wishlist'], 401);
         }
 
-        // Get product_id from JSON body or form data
         $input = json_decode(file_get_contents('php://input'), true);
         $productId = $input['product_id'] ?? $this->request->post('product_id');
         $userId = $this->getCurrentUserId();
@@ -52,16 +51,16 @@ class ApiController extends Controller
         }
 
         try {
-            // Check if item is already in wishlist
+
             $isInWishlist = $this->wishlistModel->isInWishlist($userId, $productId);
 
             if ($isInWishlist) {
-                // Remove from wishlist
+
                 $this->wishlistModel->removeFromWishlist($userId, $productId);
                 $message = 'Removed from wishlist';
                 $inWishlist = false;
             } else {
-                // Add to wishlist
+
                 $this->wishlistModel->addToWishlist($userId, $productId);
                 $message = 'Added to wishlist';
                 $inWishlist = true;

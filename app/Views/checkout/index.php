@@ -1,5 +1,5 @@
 <div class="checkout-page">
-    <!-- Breadcrumb -->
+
     <nav class="breadcrumb-nav">
         <div class="container">
             <ol class="breadcrumb">
@@ -17,21 +17,21 @@
         </div>
     </nav>
 
-    <!-- Checkout Content -->
+
     <section class="checkout-section">
         <div class="container">
             <?php if ($error): ?>
-                <div class="alert alert-error">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <?= $error ?>
-                </div>
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <?= $error ?>
+            </div>
             <?php endif; ?>
 
             <?php if ($success): ?>
-                <div class="alert alert-success">
-                    <i class="fas fa-check-circle"></i>
-                    <?= $success ?>
-                </div>
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i>
+                <?= $success ?>
+            </div>
             <?php endif; ?>
 
             <div class="checkout-header">
@@ -54,29 +54,29 @@
 
             <form class="checkout-form" method="POST" action="<?= $this->url('/checkout/process') ?>">
                 <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
-                
+
                 <div class="checkout-layout">
-                    <!-- Checkout Form -->
+
                     <div class="checkout-main">
-                        <!-- Billing Address -->
+
                         <div class="checkout-section-card">
                             <h2>
                                 <i class="fas fa-map-marker-alt"></i>
                                 Billing Address
                             </h2>
-                            
+
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="billing_first_name">First Name *</label>
-                                    <input type="text" id="billing_first_name" name="billing_first_name" 
-                                           value="<?= $this->escape($user['first_name'] ?? '') ?>" 
-                                           class="form-control" required>
+                                    <input type="text" id="billing_first_name" name="billing_first_name"
+                                        value="<?= $this->escape($user['first_name'] ?? '') ?>" class="form-control"
+                                        required>
                                 </div>
                                 <div class="form-group">
                                     <label for="billing_last_name">Last Name *</label>
-                                    <input type="text" id="billing_last_name" name="billing_last_name" 
-                                           value="<?= $this->escape($user['last_name'] ?? '') ?>" 
-                                           class="form-control" required>
+                                    <input type="text" id="billing_last_name" name="billing_last_name"
+                                        value="<?= $this->escape($user['last_name'] ?? '') ?>" class="form-control"
+                                        required>
                                 </div>
                             </div>
 
@@ -87,8 +87,8 @@
 
                             <div class="form-group">
                                 <label for="billing_address_1">Address Line 1 *</label>
-                                <input type="text" id="billing_address_1" name="billing_address_1" 
-                                       class="form-control" required>
+                                <input type="text" id="billing_address_1" name="billing_address_1" class="form-control"
+                                    required>
                             </div>
 
                             <div class="form-group">
@@ -99,16 +99,18 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="billing_city">City *</label>
-                                    <input type="text" id="billing_city" name="billing_city" class="form-control" required>
+                                    <input type="text" id="billing_city" name="billing_city" class="form-control"
+                                        required>
                                 </div>
                                 <div class="form-group">
                                     <label for="billing_state">State *</label>
-                                    <input type="text" id="billing_state" name="billing_state" class="form-control" required>
+                                    <input type="text" id="billing_state" name="billing_state" class="form-control"
+                                        required>
                                 </div>
                                 <div class="form-group">
                                     <label for="billing_postal_code">Postal Code *</label>
-                                    <input type="text" id="billing_postal_code" name="billing_postal_code" 
-                                           class="form-control" required>
+                                    <input type="text" id="billing_postal_code" name="billing_postal_code"
+                                        class="form-control" required>
                                 </div>
                             </div>
 
@@ -124,14 +126,12 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="billing_phone">Phone Number</label>
-                                    <input type="tel" id="billing_phone" name="billing_phone" 
-                                           value="<?= $this->escape($user['phone'] ?? '') ?>" 
-                                           class="form-control">
+                                    <input type="tel" id="billing_phone" name="billing_phone"
+                                        value="<?= $this->escape($user['phone'] ?? '') ?>" class="form-control">
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Shipping Address -->
                         <div class="checkout-section-card">
                             <div class="section-header">
                                 <h2>
@@ -149,27 +149,32 @@
                                 <div class="form-row">
                                     <div class="form-group">
                                         <label for="shipping_first_name">First Name *</label>
-                                        <input type="text" id="shipping_first_name" name="shipping_first_name" class="form-control">
+                                        <input type="text" id="shipping_first_name" name="shipping_first_name"
+                                            class="form-control">
                                     </div>
                                     <div class="form-group">
                                         <label for="shipping_last_name">Last Name *</label>
-                                        <input type="text" id="shipping_last_name" name="shipping_last_name" class="form-control">
+                                        <input type="text" id="shipping_last_name" name="shipping_last_name"
+                                            class="form-control">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="shipping_company">Company (Optional)</label>
-                                    <input type="text" id="shipping_company" name="shipping_company" class="form-control">
+                                    <input type="text" id="shipping_company" name="shipping_company"
+                                        class="form-control">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="shipping_address_1">Address Line 1 *</label>
-                                    <input type="text" id="shipping_address_1" name="shipping_address_1" class="form-control">
+                                    <input type="text" id="shipping_address_1" name="shipping_address_1"
+                                        class="form-control">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="shipping_address_2">Address Line 2 (Optional)</label>
-                                    <input type="text" id="shipping_address_2" name="shipping_address_2" class="form-control">
+                                    <input type="text" id="shipping_address_2" name="shipping_address_2"
+                                        class="form-control">
                                 </div>
 
                                 <div class="form-row">
@@ -179,11 +184,13 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="shipping_state">State *</label>
-                                        <input type="text" id="shipping_state" name="shipping_state" class="form-control">
+                                        <input type="text" id="shipping_state" name="shipping_state"
+                                            class="form-control">
                                     </div>
                                     <div class="form-group">
                                         <label for="shipping_postal_code">Postal Code *</label>
-                                        <input type="text" id="shipping_postal_code" name="shipping_postal_code" class="form-control">
+                                        <input type="text" id="shipping_postal_code" name="shipping_postal_code"
+                                            class="form-control">
                                     </div>
                                 </div>
 
@@ -199,19 +206,19 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="shipping_phone">Phone Number</label>
-                                        <input type="tel" id="shipping_phone" name="shipping_phone" class="form-control">
+                                        <input type="tel" id="shipping_phone" name="shipping_phone"
+                                            class="form-control">
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Payment Method -->
                         <div class="checkout-section-card">
                             <h2>
                                 <i class="fas fa-credit-card"></i>
                                 Payment Method
                             </h2>
-                            
+
                             <div class="payment-methods">
                                 <label class="payment-method">
                                     <input type="radio" name="payment_method" value="credit_card" checked>
@@ -254,35 +261,33 @@
                             </div>
                         </div>
 
-                        <!-- Order Notes -->
                         <div class="checkout-section-card">
                             <h2>
                                 <i class="fas fa-sticky-note"></i>
                                 Order Notes (Optional)
                             </h2>
                             <div class="form-group">
-                                <textarea id="notes" name="notes" class="form-control" rows="4" 
-                                          placeholder="Special instructions for your order..."></textarea>
+                                <textarea id="notes" name="notes" class="form-control" rows="4"
+                                    placeholder="Special instructions for your order..."></textarea>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Order Summary -->
                     <div class="checkout-sidebar">
                         <div class="order-summary">
                             <h3>Order Summary</h3>
-                            
+
                             <div class="order-items">
                                 <?php foreach ($cart_items as $item): ?>
-                                    <div class="order-item">
-                                        <div class="item-info">
-                                            <h4><?= $this->escape($item['product']['name']) ?></h4>
-                                            <span class="item-quantity">Qty: <?= $item['quantity'] ?></span>
-                                        </div>
-                                        <div class="item-price">
-                                            $<?= number_format($item['total'], 2) ?>
-                                        </div>
+                                <div class="order-item">
+                                    <div class="item-info">
+                                        <h4><?= $this->escape($item['product']['name']) ?></h4>
+                                        <span class="item-quantity">Qty: <?= $item['quantity'] ?></span>
                                     </div>
+                                    <div class="item-price">
+                                        $<?= number_format($item['total'], 2) ?>
+                                    </div>
+                                </div>
                                 <?php endforeach; ?>
                             </div>
 
@@ -335,7 +340,6 @@
 </div>
 
 <style>
-/* Checkout Page Styles */
 .checkout-page {
     padding-top: 0;
 }
@@ -454,7 +458,7 @@
     transition: all var(--transition-fast);
 }
 
-.payment-method input[type="radio"]:checked + .payment-option {
+.payment-method input[type="radio"]:checked+.payment-option {
     border-color: var(--primary-color);
     background: rgba(99, 102, 241, 0.05);
 }
@@ -482,7 +486,6 @@
     font-size: 0.875rem;
 }
 
-/* Order Summary */
 .order-summary {
     background: var(--bg-primary);
     border-radius: var(--radius-lg);
@@ -587,7 +590,6 @@
     color: var(--success-color);
 }
 
-/* Checkbox styling */
 .checkbox-label {
     display: flex;
     align-items: center;
@@ -601,13 +603,12 @@
     margin: 0;
 }
 
-/* Responsive */
 @media (max-width: 1024px) {
     .checkout-layout {
         grid-template-columns: 1fr;
         gap: 2rem;
     }
-    
+
     .order-summary {
         position: static;
     }
@@ -618,21 +619,21 @@
         flex-direction: column;
         gap: 1rem;
     }
-    
+
     .form-row {
         grid-template-columns: 1fr;
     }
-    
+
     .section-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
     }
-    
+
     .checkout-section-card {
         padding: 1.5rem;
     }
-    
+
     .order-summary {
         padding: 1.5rem;
     }
@@ -640,11 +641,10 @@
 </style>
 
 <script>
-// Toggle shipping address fields
 document.getElementById('different_shipping').addEventListener('change', function() {
     const shippingFields = document.getElementById('shipping_fields');
     const shippingInputs = shippingFields.querySelectorAll('input, select');
-    
+
     if (this.checked) {
         shippingFields.style.display = 'block';
         shippingInputs.forEach(input => {
@@ -660,11 +660,11 @@ document.getElementById('different_shipping').addEventListener('change', functio
     }
 });
 
-// Form validation
+
 document.querySelector('.checkout-form').addEventListener('submit', function(e) {
     const requiredFields = this.querySelectorAll('[required]');
     let isValid = true;
-    
+
     requiredFields.forEach(field => {
         if (!field.value.trim()) {
             field.classList.add('error');
@@ -673,7 +673,7 @@ document.querySelector('.checkout-form').addEventListener('submit', function(e) 
             field.classList.remove('error');
         }
     });
-    
+
     if (!isValid) {
         e.preventDefault();
         alert('Please fill in all required fields.');

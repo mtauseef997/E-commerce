@@ -14,100 +14,100 @@
 </div>
 
 <?php if ($error): ?>
-    <div class="alert alert-error">
-        <i class="fas fa-exclamation-circle"></i>
-        <?= $this->escape($error) ?>
-    </div>
+<div class="alert alert-error">
+    <i class="fas fa-exclamation-circle"></i>
+    <?= $this->escape($error) ?>
+</div>
 <?php endif; ?>
 
 <?php if ($success): ?>
-    <div class="alert alert-success">
-        <i class="fas fa-check-circle"></i>
-        <?= $this->escape($success) ?>
-    </div>
+<div class="alert alert-success">
+    <i class="fas fa-check-circle"></i>
+    <?= $this->escape($success) ?>
+</div>
 <?php endif; ?>
 
 <div class="admin-content">
-    <form class="product-form" method="POST" action="<?= $this->url('/admin/products/store') ?>" enctype="multipart/form-data">
+    <form class="product-form" method="POST" action="<?= $this->url('/admin/products/store') ?>"
+        enctype="multipart/form-data">
         <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
-        
+
         <div class="form-layout">
-            <!-- Main Product Information -->
+
             <div class="form-main">
                 <div class="form-card">
                     <h2>
                         <i class="fas fa-info-circle"></i>
                         Basic Information
                     </h2>
-                    
+
                     <div class="form-group">
                         <label for="name">Product Name *</label>
                         <input type="text" id="name" name="name" class="form-control" required
-                               placeholder="Enter product name">
+                            placeholder="Enter product name">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="slug">Product Slug</label>
                         <input type="text" id="slug" name="slug" class="form-control"
-                               placeholder="product-slug (auto-generated if empty)">
+                            placeholder="product-slug (auto-generated if empty)">
                         <small class="form-help">URL-friendly version of the name. Leave empty to auto-generate.</small>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="description">Description</label>
                         <textarea id="description" name="description" class="form-control" rows="6"
-                                  placeholder="Enter product description..."></textarea>
+                            placeholder="Enter product description..."></textarea>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="short_description">Short Description</label>
                         <textarea id="short_description" name="short_description" class="form-control" rows="3"
-                                  placeholder="Brief product summary..."></textarea>
+                            placeholder="Brief product summary..."></textarea>
                     </div>
                 </div>
 
-                <!-- Pricing -->
+
                 <div class="form-card">
                     <h2>
                         <i class="fas fa-dollar-sign"></i>
                         Pricing
                     </h2>
-                    
+
                     <div class="form-row">
                         <div class="form-group">
                             <label for="price">Regular Price *</label>
                             <div class="input-group">
                                 <span class="input-prefix">$</span>
-                                <input type="number" id="price" name="price" class="form-control" 
-                                       step="0.01" min="0" required placeholder="0.00">
+                                <input type="number" id="price" name="price" class="form-control" step="0.01" min="0"
+                                    required placeholder="0.00">
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="sale_price">Sale Price</label>
                             <div class="input-group">
                                 <span class="input-prefix">$</span>
-                                <input type="number" id="sale_price" name="sale_price" class="form-control" 
-                                       step="0.01" min="0" placeholder="0.00">
+                                <input type="number" id="sale_price" name="sale_price" class="form-control" step="0.01"
+                                    min="0" placeholder="0.00">
                             </div>
                             <small class="form-help">Leave empty if not on sale</small>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="sku">SKU (Stock Keeping Unit)</label>
-                        <input type="text" id="sku" name="sku" class="form-control"
-                               placeholder="Enter unique SKU">
+                        <input type="text" id="sku" name="sku" class="form-control" placeholder="Enter unique SKU">
                     </div>
                 </div>
 
-                <!-- Inventory -->
+
                 <div class="form-card">
                     <h2>
                         <i class="fas fa-boxes"></i>
                         Inventory
                     </h2>
-                    
+
                     <div class="form-group">
                         <label class="checkbox-label">
                             <input type="checkbox" id="manage_stock" name="manage_stock" value="1" checked>
@@ -115,24 +115,24 @@
                             Manage stock quantity
                         </label>
                     </div>
-                    
+
                     <div id="stock_fields" class="stock-fields">
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="stock_quantity">Stock Quantity</label>
-                                <input type="number" id="stock_quantity" name="stock_quantity" 
-                                       class="form-control" min="0" value="0">
+                                <input type="number" id="stock_quantity" name="stock_quantity" class="form-control"
+                                    min="0" value="0">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="low_stock_threshold">Low Stock Alert</label>
-                                <input type="number" id="low_stock_threshold" name="low_stock_threshold" 
-                                       class="form-control" min="0" value="5">
+                                <input type="number" id="low_stock_threshold" name="low_stock_threshold"
+                                    class="form-control" min="0" value="5">
                                 <small class="form-help">Alert when stock falls below this number</small>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="stock_status">Stock Status</label>
                         <select id="stock_status" name="stock_status" class="form-control">
@@ -143,18 +143,18 @@
                     </div>
                 </div>
 
-                <!-- Product Images -->
+
                 <div class="form-card">
                     <h2>
                         <i class="fas fa-images"></i>
                         Product Images
                     </h2>
-                    
+
                     <div class="form-group">
                         <label for="image">Main Product Image</label>
                         <div class="file-upload-area">
-                            <input type="file" id="image" name="image" class="file-input" 
-                                   accept="image/*" onchange="previewImage(this, 'main-preview')">
+                            <input type="file" id="image" name="image" class="file-input" accept="image/*"
+                                onchange="previewImage(this, 'main-preview')">
                             <div class="file-upload-content">
                                 <i class="fas fa-cloud-upload-alt"></i>
                                 <p>Click to upload or drag and drop</p>
@@ -163,12 +163,12 @@
                         </div>
                         <div id="main-preview" class="image-preview"></div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="gallery">Additional Images</label>
                         <div class="file-upload-area">
-                            <input type="file" id="gallery" name="gallery[]" class="file-input" 
-                                   accept="image/*" multiple onchange="previewGallery(this)">
+                            <input type="file" id="gallery" name="gallery[]" class="file-input" accept="image/*"
+                                multiple onchange="previewGallery(this)">
                             <div class="file-upload-content">
                                 <i class="fas fa-images"></i>
                                 <p>Upload multiple images</p>
@@ -179,16 +179,14 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Sidebar -->
             <div class="form-sidebar">
-                <!-- Publish Settings -->
+
                 <div class="form-card">
                     <h3>
                         <i class="fas fa-cog"></i>
                         Publish Settings
                     </h3>
-                    
+
                     <div class="form-group">
                         <label for="status">Status</label>
                         <select id="status" name="status" class="form-control">
@@ -197,7 +195,7 @@
                             <option value="inactive">Inactive</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="featured">Featured Product</label>
                         <label class="checkbox-label">
@@ -208,86 +206,86 @@
                     </div>
                 </div>
 
-                <!-- Category -->
+
                 <div class="form-card">
                     <h3>
                         <i class="fas fa-folder"></i>
                         Category
                     </h3>
-                    
+
                     <div class="form-group">
                         <label for="category_id">Product Category *</label>
                         <select id="category_id" name="category_id" class="form-control" required>
                             <option value="">Select Category</option>
                             <?php foreach ($categories as $category): ?>
-                                <option value="<?= $category['id'] ?>">
-                                    <?= $this->escape($category['name']) ?>
-                                </option>
+                            <option value="<?= $category['id'] ?>">
+                                <?= $this->escape($category['name']) ?>
+                            </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
                 </div>
 
-                <!-- Product Attributes -->
+
                 <div class="form-card">
                     <h3>
                         <i class="fas fa-tags"></i>
                         Attributes
                     </h3>
-                    
+
                     <div class="form-group">
                         <label for="weight">Weight (kg)</label>
-                        <input type="number" id="weight" name="weight" class="form-control" 
-                               step="0.01" min="0" placeholder="0.00">
+                        <input type="number" id="weight" name="weight" class="form-control" step="0.01" min="0"
+                            placeholder="0.00">
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Dimensions (cm)</label>
                         <div class="dimensions-group">
-                            <input type="number" name="length" class="form-control" 
-                                   placeholder="Length" step="0.01" min="0">
+                            <input type="number" name="length" class="form-control" placeholder="Length" step="0.01"
+                                min="0">
                             <span>×</span>
-                            <input type="number" name="width" class="form-control" 
-                                   placeholder="Width" step="0.01" min="0">
+                            <input type="number" name="width" class="form-control" placeholder="Width" step="0.01"
+                                min="0">
                             <span>×</span>
-                            <input type="number" name="height" class="form-control" 
-                                   placeholder="Height" step="0.01" min="0">
+                            <input type="number" name="height" class="form-control" placeholder="Height" step="0.01"
+                                min="0">
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="tags">Tags</label>
                         <input type="text" id="tags" name="tags" class="form-control"
-                               placeholder="Enter tags separated by commas">
+                            placeholder="Enter tags separated by commas">
                         <small class="form-help">e.g., electronics, smartphone, android</small>
                     </div>
                 </div>
 
-                <!-- SEO -->
+
                 <div class="form-card">
                     <h3>
                         <i class="fas fa-search"></i>
                         SEO Settings
                     </h3>
-                    
+
                     <div class="form-group">
                         <label for="meta_title">Meta Title</label>
                         <input type="text" id="meta_title" name="meta_title" class="form-control"
-                               placeholder="SEO title for search engines">
+                            placeholder="SEO title for search engines">
                         <small class="form-help">Recommended: 50-60 characters</small>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="meta_description">Meta Description</label>
                         <textarea id="meta_description" name="meta_description" class="form-control" rows="3"
-                                  placeholder="SEO description for search engines"></textarea>
+                            placeholder="SEO description for search engines"></textarea>
                         <small class="form-help">Recommended: 150-160 characters</small>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Form Actions -->
+
         <div class="form-actions">
             <button type="submit" name="action" value="save" class="btn btn-primary">
                 <i class="fas fa-save"></i>
@@ -306,7 +304,6 @@
 </div>
 
 <style>
-/* Product Form Styles */
 .product-form {
     max-width: none;
 }
@@ -380,7 +377,7 @@
     border-top: 1px solid var(--border-color);
 }
 
-/* File Upload */
+
 .file-upload-area {
     border: 2px dashed var(--border-color);
     border-radius: 8px;
@@ -487,12 +484,12 @@
     margin-top: 2rem;
 }
 
-/* Responsive */
+
 @media (max-width: 1024px) {
     .form-layout {
         grid-template-columns: 1fr;
     }
-    
+
     .form-sidebar {
         order: -1;
     }
@@ -502,15 +499,15 @@
     .form-row {
         grid-template-columns: 1fr;
     }
-    
+
     .form-actions {
         flex-direction: column;
     }
-    
+
     .dimensions-group {
         flex-direction: column;
     }
-    
+
     .dimensions-group span {
         display: none;
     }
@@ -518,7 +515,6 @@
 </style>
 
 <script>
-// Auto-generate slug from name
 document.getElementById('name').addEventListener('input', function() {
     const slugField = document.getElementById('slug');
     if (!slugField.value) {
@@ -530,11 +526,11 @@ document.getElementById('name').addEventListener('input', function() {
     }
 });
 
-// Toggle stock fields
+
 document.getElementById('manage_stock').addEventListener('change', function() {
     const stockFields = document.getElementById('stock_fields');
     const stockInputs = stockFields.querySelectorAll('input');
-    
+
     if (this.checked) {
         stockFields.style.display = 'block';
         stockInputs.forEach(input => input.removeAttribute('disabled'));
@@ -544,11 +540,11 @@ document.getElementById('manage_stock').addEventListener('change', function() {
     }
 });
 
-// Image preview functions
+
 function previewImage(input, previewId) {
     const preview = document.getElementById(previewId);
     preview.innerHTML = '';
-    
+
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -569,7 +565,7 @@ function previewImage(input, previewId) {
 function previewGallery(input) {
     const preview = document.getElementById('gallery-preview');
     preview.innerHTML = '';
-    
+
     if (input.files) {
         Array.from(input.files).forEach((file, index) => {
             const reader = new FileReader();
@@ -595,8 +591,7 @@ function removePreview(previewId, inputId) {
 }
 
 function removeGalleryItem(index) {
-    // This would need more complex logic to remove specific files
-    // For now, just clear the preview
+
     const preview = document.getElementById('gallery-preview');
     const items = preview.querySelectorAll('.preview-item');
     if (items[index]) {
@@ -604,11 +599,10 @@ function removeGalleryItem(index) {
     }
 }
 
-// Form validation
 document.querySelector('.product-form').addEventListener('submit', function(e) {
     const requiredFields = this.querySelectorAll('[required]');
     let isValid = true;
-    
+
     requiredFields.forEach(field => {
         if (!field.value.trim()) {
             field.classList.add('error');
@@ -617,7 +611,7 @@ document.querySelector('.product-form').addEventListener('submit', function(e) {
             field.classList.remove('error');
         }
     });
-    
+
     if (!isValid) {
         e.preventDefault();
         alert('Please fill in all required fields.');

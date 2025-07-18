@@ -26,7 +26,7 @@ class Wishlist extends Model
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                 FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
             )";
-            
+
             $this->db->exec($sql);
         } catch (\Exception $e) {
             error_log('Failed to create wishlists table: ' . $e->getMessage());
@@ -40,7 +40,7 @@ class Wishlist extends Model
                 INSERT IGNORE INTO wishlists (user_id, product_id) 
                 VALUES (?, ?)
             ");
-            
+
             return $stmt->execute([$userId, $productId]);
         } catch (\Exception $e) {
             error_log('Wishlist::addToWishlist - Error: ' . $e->getMessage());
@@ -55,7 +55,7 @@ class Wishlist extends Model
                 DELETE FROM wishlists 
                 WHERE user_id = ? AND product_id = ?
             ");
-            
+
             return $stmt->execute([$userId, $productId]);
         } catch (\Exception $e) {
             error_log('Wishlist::removeFromWishlist - Error: ' . $e->getMessage());
@@ -71,10 +71,10 @@ class Wishlist extends Model
                 FROM wishlists 
                 WHERE user_id = ? AND product_id = ?
             ");
-            
+
             $stmt->execute([$userId, $productId]);
             $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-            
+
             return $result['count'] > 0;
         } catch (\Exception $e) {
             error_log('Wishlist::isInWishlist - Error: ' . $e->getMessage());
@@ -90,10 +90,10 @@ class Wishlist extends Model
                 FROM wishlists 
                 WHERE user_id = ?
             ");
-            
+
             $stmt->execute([$userId]);
             $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-            
+
             return (int) $result['count'];
         } catch (\Exception $e) {
             error_log('Wishlist::getWishlistCount - Error: ' . $e->getMessage());
@@ -109,7 +109,7 @@ class Wishlist extends Model
                 WHERE user_id = ? 
                 ORDER BY created_at DESC
             ");
-            
+
             $stmt->execute([$userId]);
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\Exception $e) {
@@ -143,7 +143,7 @@ class Wishlist extends Model
                 WHERE w.user_id = ? AND p.status = 'active'
                 ORDER BY w.created_at DESC
             ");
-            
+
             $stmt->execute([$userId]);
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\Exception $e) {
@@ -159,7 +159,7 @@ class Wishlist extends Model
                 DELETE FROM wishlists 
                 WHERE user_id = ?
             ");
-            
+
             return $stmt->execute([$userId]);
         } catch (\Exception $e) {
             error_log('Wishlist::clearWishlist - Error: ' . $e->getMessage());
@@ -175,10 +175,10 @@ class Wishlist extends Model
                 FROM wishlists 
                 WHERE user_id = ?
             ");
-            
+
             $stmt->execute([$userId]);
             $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-            
+
             return array_column($results, 'product_id');
         } catch (\Exception $e) {
             error_log('Wishlist::getWishlistProductIds - Error: ' . $e->getMessage());
@@ -189,8 +189,6 @@ class Wishlist extends Model
     public function moveToCart($userId, $productId)
     {
         try {
-            // This would integrate with the cart system
-            // For now, just remove from wishlist
             return $this->removeFromWishlist($userId, $productId);
         } catch (\Exception $e) {
             error_log('Wishlist::moveToCart - Error: ' . $e->getMessage());
@@ -214,7 +212,7 @@ class Wishlist extends Model
                 ORDER BY w.created_at DESC
                 LIMIT ?
             ");
-            
+
             $stmt->execute([$userId, $limit]);
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\Exception $e) {
@@ -237,7 +235,7 @@ class Wishlist extends Model
                 INNER JOIN products p ON w.product_id = p.id
                 WHERE w.user_id = ? AND p.status = 'active'
             ");
-            
+
             $stmt->execute([$userId]);
             return $stmt->fetch(\PDO::FETCH_ASSOC);
         } catch (\Exception $e) {

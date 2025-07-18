@@ -18,20 +18,19 @@
 </div>
 
 <?php if ($success): ?>
-    <div class="alert alert-success">
-        <i class="fas fa-check-circle"></i>
-        <?= $this->escape($success) ?>
-    </div>
+<div class="alert alert-success">
+    <i class="fas fa-check-circle"></i>
+    <?= $this->escape($success) ?>
+</div>
 <?php endif; ?>
 
 <?php if ($error): ?>
-    <div class="alert alert-error">
-        <i class="fas fa-exclamation-circle"></i>
-        <?= $this->escape($error) ?>
-    </div>
+<div class="alert alert-error">
+    <i class="fas fa-exclamation-circle"></i>
+    <?= $this->escape($error) ?>
+</div>
 <?php endif; ?>
 
-<!-- User Statistics -->
 <div class="user-stats">
     <div class="stat-card">
         <div class="stat-icon total">
@@ -71,7 +70,6 @@
     </div>
 </div>
 
-<!-- Filters -->
 <div class="admin-filters">
     <form method="GET" class="filters-form">
         <div class="filter-group">
@@ -82,7 +80,7 @@
                 <option value="admin">Administrators</option>
             </select>
         </div>
-        
+
         <div class="filter-group">
             <label for="status">Account Status</label>
             <select id="status" name="status" class="form-control">
@@ -92,14 +90,12 @@
                 <option value="suspended">Suspended</option>
             </select>
         </div>
-        
+
         <div class="filter-group">
             <label for="search">Search Users</label>
-            <input type="text" id="search" name="search" 
-                   placeholder="Name, email, username..."
-                   class="form-control">
+            <input type="text" id="search" name="search" placeholder="Name, email, username..." class="form-control">
         </div>
-        
+
         <div class="filter-actions">
             <button type="submit" class="btn btn-primary">
                 <i class="fas fa-search"></i>
@@ -113,198 +109,191 @@
     </form>
 </div>
 
-<!-- Users Table -->
 <div class="admin-table-container">
     <?php if (!empty($users)): ?>
-        <div class="table-header">
-            <div class="table-info">
-                <span class="results-count">
-                    Showing <?= count($users) ?> of <?= $total_users ?> users
-                </span>
-            </div>
-            <div class="table-actions">
-                <button class="btn btn-outline btn-sm" onclick="selectAll()">
-                    <i class="fas fa-check-square"></i>
-                    Select All
-                </button>
-                <button class="btn btn-outline btn-sm" onclick="bulkAction()">
-                    <i class="fas fa-cog"></i>
-                    Bulk Actions
-                </button>
-            </div>
+    <div class="table-header">
+        <div class="table-info">
+            <span class="results-count">
+                Showing <?= count($users) ?> of <?= $total_users ?> users
+            </span>
         </div>
-        
-        <div class="table-responsive">
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th><input type="checkbox" id="select-all"></th>
-                        <th>User</th>
-                        <th>Contact</th>
-                        <th>Role</th>
-                        <th>Joined</th>
-                        <th>Last Login</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($users as $user): ?>
-                        <tr>
-                            <td>
-                                <input type="checkbox" class="user-checkbox" value="<?= $user['id'] ?>">
-                            </td>
-                            <td>
-                                <div class="user-info">
-                                    <div class="user-avatar">
-                                        <?php if ($user['avatar'] ?? false): ?>
-                                            <img src="<?= $this->asset('images/avatars/' . $user['avatar']) ?>" 
-                                                 alt="<?= $this->escape($user['first_name'] . ' ' . $user['last_name']) ?>">
-                                        <?php else: ?>
-                                            <div class="avatar-placeholder">
-                                                <?= strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)) ?>
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="user-details">
-                                        <div class="user-name">
-                                            <?= $this->escape($user['first_name'] . ' ' . $user['last_name']) ?>
-                                        </div>
-                                        <div class="username">
-                                            @<?= $this->escape($user['username']) ?>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="contact-info">
-                                    <div class="email">
-                                        <i class="fas fa-envelope"></i>
-                                        <?= $this->escape($user['email']) ?>
-                                    </div>
-                                    <?php if ($user['phone'] ?? false): ?>
-                                        <div class="phone">
-                                            <i class="fas fa-phone"></i>
-                                            <?= $this->escape($user['phone']) ?>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="role-badge role-<?= $user['role'] ?>">
-                                    <?php if ($user['role'] === 'admin'): ?>
-                                        <i class="fas fa-shield-alt"></i>
-                                        Administrator
-                                    <?php else: ?>
-                                        <i class="fas fa-user"></i>
-                                        Customer
-                                    <?php endif; ?>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="date-info">
-                                    <div class="date"><?= $this->date($user['created_at'], 'M j, Y') ?></div>
-                                    <div class="time"><?= $this->date($user['created_at'], 'g:i A') ?></div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="date-info">
-                                    <?php if ($user['last_login'] ?? false): ?>
-                                        <div class="date"><?= $this->date($user['last_login'], 'M j, Y') ?></div>
-                                        <div class="time"><?= $this->date($user['last_login'], 'g:i A') ?></div>
-                                    <?php else: ?>
-                                        <span class="text-muted">Never</span>
-                                    <?php endif; ?>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="status-badge status-<?= $user['status'] ?? 'active' ?>">
-                                    <?= ucfirst($user['status'] ?? 'active') ?>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button onclick="viewUser(<?= $user['id'] ?>)" 
-                                            class="btn btn-sm btn-outline" title="View Profile">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button onclick="editUser(<?= $user['id'] ?>)" 
-                                            class="btn btn-sm btn-primary" title="Edit User">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <?php if ($user['role'] !== 'admin'): ?>
-                                        <button onclick="toggleUserStatus(<?= $user['id'] ?>)" 
-                                                class="btn btn-sm btn-secondary" title="Toggle Status">
-                                            <i class="fas fa-toggle-on"></i>
-                                        </button>
-                                        <button onclick="deleteUser(<?= $user['id'] ?>)" 
-                                                class="btn btn-sm btn-danger" title="Delete User">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    <?php else: ?>
-                                        <button class="btn btn-sm btn-danger" disabled title="Cannot delete admin">
-                                            <i class="fas fa-lock"></i>
-                                        </button>
-                                    <?php endif; ?>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- Pagination -->
-        <?php if ($total_pages > 1): ?>
-            <div class="admin-pagination">
-                <div class="pagination-info">
-                    Page <?= $current_page ?> of <?= $total_pages ?>
-                </div>
-                <div class="pagination-controls">
-                    <?php if ($current_page > 1): ?>
-                        <a href="<?= $this->url('/admin/users?page=' . ($current_page - 1)) ?>" 
-                           class="btn btn-outline">
-                            <i class="fas fa-chevron-left"></i>
-                            Previous
-                        </a>
-                    <?php endif; ?>
-                    
-                    <?php for ($i = max(1, $current_page - 2); $i <= min($total_pages, $current_page + 2); $i++): ?>
-                        <?php if ($i == $current_page): ?>
-                            <span class="btn btn-primary"><?= $i ?></span>
-                        <?php else: ?>
-                            <a href="<?= $this->url('/admin/users?page=' . $i) ?>" 
-                               class="btn btn-outline"><?= $i ?></a>
-                        <?php endif; ?>
-                    <?php endfor; ?>
-                    
-                    <?php if ($current_page < $total_pages): ?>
-                        <a href="<?= $this->url('/admin/users?page=' . ($current_page + 1)) ?>" 
-                           class="btn btn-outline">
-                            Next
-                            <i class="fas fa-chevron-right"></i>
-                        </a>
-                    <?php endif; ?>
-                </div>
-            </div>
-        <?php endif; ?>
-        
-    <?php else: ?>
-        <div class="empty-state">
-            <div class="empty-icon">
-                <i class="fas fa-users"></i>
-            </div>
-            <h3>No users found</h3>
-            <p>No users match your current filters or no users have registered yet.</p>
-            <button class="btn btn-primary" onclick="showAddUserModal()">
-                <i class="fas fa-plus"></i>
-                Add First User
+        <div class="table-actions">
+            <button class="btn btn-outline btn-sm" onclick="selectAll()">
+                <i class="fas fa-check-square"></i>
+                Select All
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="bulkAction()">
+                <i class="fas fa-cog"></i>
+                Bulk Actions
             </button>
         </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select-all"></th>
+                    <th>User</th>
+                    <th>Contact</th>
+                    <th>Role</th>
+                    <th>Joined</th>
+                    <th>Last Login</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($users as $user): ?>
+                <tr>
+                    <td>
+                        <input type="checkbox" class="user-checkbox" value="<?= $user['id'] ?>">
+                    </td>
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                <?php if ($user['avatar'] ?? false): ?>
+                                <img src="<?= $this->asset('images/avatars/' . $user['avatar']) ?>"
+                                    alt="<?= $this->escape($user['first_name'] . ' ' . $user['last_name']) ?>">
+                                <?php else: ?>
+                                <div class="avatar-placeholder">
+                                    <?= strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)) ?>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                            <div class="user-details">
+                                <div class="user-name">
+                                    <?= $this->escape($user['first_name'] . ' ' . $user['last_name']) ?>
+                                </div>
+                                <div class="username">
+                                    @<?= $this->escape($user['username']) ?>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="contact-info">
+                            <div class="email">
+                                <i class="fas fa-envelope"></i>
+                                <?= $this->escape($user['email']) ?>
+                            </div>
+                            <?php if ($user['phone'] ?? false): ?>
+                            <div class="phone">
+                                <i class="fas fa-phone"></i>
+                                <?= $this->escape($user['phone']) ?>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="role-badge role-<?= $user['role'] ?>">
+                            <?php if ($user['role'] === 'admin'): ?>
+                            <i class="fas fa-shield-alt"></i>
+                            Administrator
+                            <?php else: ?>
+                            <i class="fas fa-user"></i>
+                            Customer
+                            <?php endif; ?>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="date-info">
+                            <div class="date"><?= $this->date($user['created_at'], 'M j, Y') ?></div>
+                            <div class="time"><?= $this->date($user['created_at'], 'g:i A') ?></div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="date-info">
+                            <?php if ($user['last_login'] ?? false): ?>
+                            <div class="date"><?= $this->date($user['last_login'], 'M j, Y') ?></div>
+                            <div class="time"><?= $this->date($user['last_login'], 'g:i A') ?></div>
+                            <?php else: ?>
+                            <span class="text-muted">Never</span>
+                            <?php endif; ?>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="status-badge status-<?= $user['status'] ?? 'active' ?>">
+                            <?= ucfirst($user['status'] ?? 'active') ?>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button onclick="viewUser(<?= $user['id'] ?>)" class="btn btn-sm btn-outline"
+                                title="View Profile">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button onclick="editUser(<?= $user['id'] ?>)" class="btn btn-sm btn-primary"
+                                title="Edit User">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <?php if ($user['role'] !== 'admin'): ?>
+                            <button onclick="toggleUserStatus(<?= $user['id'] ?>)" class="btn btn-sm btn-secondary"
+                                title="Toggle Status">
+                                <i class="fas fa-toggle-on"></i>
+                            </button>
+                            <button onclick="deleteUser(<?= $user['id'] ?>)" class="btn btn-sm btn-danger"
+                                title="Delete User">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <?php else: ?>
+                            <button class="btn btn-sm btn-danger" disabled title="Cannot delete admin">
+                                <i class="fas fa-lock"></i>
+                            </button>
+                            <?php endif; ?>
+                        </div>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php if ($total_pages > 1): ?>
+    <div class="admin-pagination">
+        <div class="pagination-info">
+            Page <?= $current_page ?> of <?= $total_pages ?>
+        </div>
+        <div class="pagination-controls">
+            <?php if ($current_page > 1): ?>
+            <a href="<?= $this->url('/admin/users?page=' . ($current_page - 1)) ?>" class="btn btn-outline">
+                <i class="fas fa-chevron-left"></i>
+                Previous
+            </a>
+            <?php endif; ?>
+
+            <?php for ($i = max(1, $current_page - 2); $i <= min($total_pages, $current_page + 2); $i++): ?>
+            <?php if ($i == $current_page): ?>
+            <span class="btn btn-primary"><?= $i ?></span>
+            <?php else: ?>
+            <a href="<?= $this->url('/admin/users?page=' . $i) ?>" class="btn btn-outline"><?= $i ?></a>
+            <?php endif; ?>
+            <?php endfor; ?>
+
+            <?php if ($current_page < $total_pages): ?>
+            <a href="<?= $this->url('/admin/users?page=' . ($current_page + 1)) ?>" class="btn btn-outline">
+                Next
+                <i class="fas fa-chevron-right"></i>
+            </a>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <?php else: ?>
+    <div class="empty-state">
+        <div class="empty-icon">
+            <i class="fas fa-users"></i>
+        </div>
+        <h3>No users found</h3>
+        <p>No users match your current filters or no users have registered yet.</p>
+        <button class="btn btn-primary" onclick="showAddUserModal()">
+            <i class="fas fa-plus"></i>
+            Add First User
+        </button>
+    </div>
     <?php endif; ?>
 </div>
 
-<!-- Add/Edit User Modal -->
 <div class="modal" id="userModal">
     <div class="modal-content">
         <div class="modal-header">
@@ -316,7 +305,7 @@
         <form id="userForm" method="POST">
             <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
             <input type="hidden" name="user_id" id="userId">
-            
+
             <div class="modal-body">
                 <div class="form-row">
                     <div class="form-group">
@@ -328,12 +317,12 @@
                         <input type="text" id="lastName" name="last_name" class="form-control" required>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="userEmail">Email Address *</label>
                     <input type="email" id="userEmail" name="email" class="form-control" required>
                 </div>
-                
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="userUsername">Username *</label>
@@ -344,7 +333,7 @@
                         <input type="tel" id="userPhone" name="phone" class="form-control">
                     </div>
                 </div>
-                
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="userRole">Role *</label>
@@ -362,19 +351,19 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="userPassword">Password *</label>
                     <input type="password" id="userPassword" name="password" class="form-control" required>
                     <small class="form-help">Minimum 8 characters</small>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="confirmPassword">Confirm Password *</label>
                     <input type="password" id="confirmPassword" name="confirm_password" class="form-control" required>
                 </div>
             </div>
-            
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="closeUserModal()">
                     Cancel
@@ -417,10 +406,21 @@
     color: white;
 }
 
-.stat-icon.total { background: #6366f1; }
-.stat-icon.customers { background: #10b981; }
-.stat-icon.admins { background: #f59e0b; }
-.stat-icon.active { background: #059669; }
+.stat-icon.total {
+    background: #6366f1;
+}
+
+.stat-icon.customers {
+    background: #10b981;
+}
+
+.stat-icon.admins {
+    background: #f59e0b;
+}
+
+.stat-icon.active {
+    background: #059669;
+}
 
 .user-info {
     display: flex;
@@ -521,9 +521,20 @@
     text-transform: uppercase;
 }
 
-.status-active { background: #dcfce7; color: #166534; }
-.status-inactive { background: #f3f4f6; color: #6b7280; }
-.status-suspended { background: #fee2e2; color: #991b1b; }
+.status-active {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-inactive {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.status-suspended {
+    background: #fee2e2;
+    color: #991b1b;
+}
 
 .form-row {
     display: grid;
@@ -535,17 +546,17 @@
     .user-stats {
         grid-template-columns: 1fr;
     }
-    
+
     .user-info {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
     }
-    
+
     .contact-info {
         min-width: auto;
     }
-    
+
     .form-row {
         grid-template-columns: 1fr;
     }
@@ -566,19 +577,19 @@ function editUser(userId) {
     document.getElementById('userForm').action = `/admin/users/${userId}/edit`;
     document.getElementById('userId').value = userId;
     document.getElementById('userModal').classList.add('active');
-    
-    // Here you would typically load the user data via AJAX
+
+
     console.log('Edit user:', userId);
 }
 
 function viewUser(userId) {
-    // Implementation for viewing user profile
+
     window.open(`/admin/users/${userId}`, '_blank');
 }
 
 function toggleUserStatus(userId) {
     if (confirm('Are you sure you want to toggle this user\'s status?')) {
-        // Implementation for toggling user status
+
         console.log('Toggle status for user:', userId);
     }
 }
@@ -588,12 +599,12 @@ function deleteUser(userId) {
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = `/admin/users/${userId}/delete`;
-        
+
         const csrfToken = document.createElement('input');
         csrfToken.type = 'hidden';
         csrfToken.name = 'csrf_token';
         csrfToken.value = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        
+
         form.appendChild(csrfToken);
         document.body.appendChild(form);
         form.submit();
@@ -607,7 +618,7 @@ function closeUserModal() {
 function selectAll() {
     const selectAllCheckbox = document.getElementById('select-all');
     const checkboxes = document.querySelectorAll('.user-checkbox');
-    
+
     checkboxes.forEach(checkbox => {
         checkbox.checked = selectAllCheckbox.checked;
     });
@@ -615,12 +626,12 @@ function selectAll() {
 
 function bulkAction() {
     const selectedUsers = document.querySelectorAll('.user-checkbox:checked');
-    
+
     if (selectedUsers.length === 0) {
         alert('Please select users to perform bulk actions.');
         return;
     }
-    
+
     const action = prompt('Enter action (activate, deactivate, suspend, delete):');
     if (action && confirm(`Perform "${action}" on ${selectedUsers.length} selected users?`)) {
         console.log('Bulk action:', action, 'on users:', Array.from(selectedUsers).map(cb => cb.value));
@@ -631,18 +642,18 @@ function exportUsers() {
     window.location.href = '/admin/users/export';
 }
 
-// Close modal when clicking outside
+
 document.getElementById('userModal').addEventListener('click', function(e) {
     if (e.target === this) {
         closeUserModal();
     }
 });
 
-// Password confirmation validation
+
 document.getElementById('confirmPassword').addEventListener('input', function() {
     const password = document.getElementById('userPassword').value;
     const confirmPassword = this.value;
-    
+
     if (password !== confirmPassword) {
         this.setCustomValidity('Passwords do not match');
     } else {

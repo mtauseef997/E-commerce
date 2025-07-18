@@ -482,13 +482,12 @@ function showAddCategoryModal() {
 }
 
 function editCategory(categoryId) {
-    // Implementation for editing category
+
     document.getElementById('modalTitle').textContent = 'Edit Category';
     document.getElementById('categoryForm').action = `/admin/categories/${categoryId}/edit`;
     document.getElementById('categoryId').value = categoryId;
     document.getElementById('categoryModal').classList.add('active');
 
-    // Here you would typically load the category data via AJAX
     console.log('Edit category:', categoryId);
 }
 

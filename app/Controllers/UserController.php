@@ -141,7 +141,7 @@ class UserController extends Controller
         $userId = $this->getCurrentUserId();
 
         try {
-            // Get the order and verify ownership
+
             $order = $this->orderModel->find($id);
             if (!$order || $order['user_id'] != $userId) {
                 if ($this->request->isAjax()) {
@@ -154,7 +154,7 @@ class UserController extends Controller
                 $this->redirect('/orders');
             }
 
-            // Check if order can be cancelled
+
             if (!in_array($order['status'], ['pending', 'processing'])) {
                 if ($this->request->isAjax()) {
                     return $this->json([
@@ -166,7 +166,7 @@ class UserController extends Controller
                 $this->redirect('/orders/' . $id);
             }
 
-            // Cancel the order
+
             $result = $this->orderModel->cancelOrder($id);
 
             if ($result) {

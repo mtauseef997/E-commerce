@@ -52,7 +52,7 @@ class CartController extends Controller
             $this->redirect('/cart');
         }
 
-        // Debug logging
+
         error_log('CartController::add called');
         error_log('POST data: ' . print_r($_POST, true));
         error_log('Is AJAX: ' . ($this->request->isAjax() ? 'yes' : 'no'));

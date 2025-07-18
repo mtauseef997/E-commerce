@@ -27,10 +27,10 @@ class PagesController extends Controller
     private function handleContactForm()
     {
         try {
-            // Validate CSRF token
+
             $this->validateCsrf();
 
-            // Get form data
+
             $data = [
                 'first_name' => $this->request->post('first_name'),
                 'last_name' => $this->request->post('last_name'),
@@ -41,7 +41,7 @@ class PagesController extends Controller
                 'newsletter' => $this->request->post('newsletter', 0)
             ];
 
-            // Validate required fields
+
             $errors = [];
             if (empty($data['first_name'])) {
                 $errors[] = 'First name is required';
@@ -67,13 +67,12 @@ class PagesController extends Controller
                 ]);
             }
 
-            // Save contact message to database (optional)
+
             $this->saveContactMessage($data);
 
-            // Send email notification (you can implement this)
+
             $this->sendContactNotification($data);
 
-            // Subscribe to newsletter if requested
             if ($data['newsletter']) {
                 $this->subscribeToNewsletter($data['email']);
             }
@@ -94,7 +93,6 @@ class PagesController extends Controller
         try {
             $db = \App\Core\Database::getInstance()->getConnection();
 
-            // Create contacts table if it doesn't exist
             $createTable = "
                 CREATE TABLE IF NOT EXISTS contacts (
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -112,7 +110,7 @@ class PagesController extends Controller
             ";
             $db->exec($createTable);
 
-            // Insert contact message
+
             $stmt = $db->prepare("
                 INSERT INTO contacts (first_name, last_name, email, phone, subject, message, newsletter)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -128,15 +126,14 @@ class PagesController extends Controller
                 $data['newsletter']
             ]);
         } catch (\Exception $e) {
-            // Log error but don't fail the form submission
+
             error_log('Failed to save contact message: ' . $e->getMessage());
         }
     }
 
     private function sendContactNotification($data)
     {
-        // This is where you would implement email sending
-        // For now, we'll just log the message
+
         $message = "New contact form submission:\n";
         $message .= "Name: {$data['first_name']} {$data['last_name']}\n";
         $message .= "Email: {$data['email']}\n";
@@ -145,17 +142,6 @@ class PagesController extends Controller
         $message .= "Message: {$data['message']}\n";
 
         error_log($message);
-
-        // You can implement actual email sending here using PHPMailer or similar
-        // Example:
-        /*
-        $mail = new PHPMailer();
-        $mail->setFrom($data['email'], $data['first_name'] . ' ' . $data['last_name']);
-        $mail->addAddress('support@modernshop.com');
-        $mail->Subject = 'Contact Form: ' . $data['subject'];
-        $mail->Body = $message;
-        $mail->send();
-        */
     }
 
     private function subscribeToNewsletter($email)
@@ -163,7 +149,6 @@ class PagesController extends Controller
         try {
             $db = \App\Core\Database::getInstance()->getConnection();
 
-            // Create newsletter_subscribers table if it doesn't exist
             $createTable = "
                 CREATE TABLE IF NOT EXISTS newsletter_subscribers (
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -175,7 +160,7 @@ class PagesController extends Controller
             ";
             $db->exec($createTable);
 
-            // Insert or update subscriber
+
             $stmt = $db->prepare("
                 INSERT INTO newsletter_subscribers (email, status, subscribed_at)
                 VALUES (?, 'active', NOW())
@@ -187,7 +172,7 @@ class PagesController extends Controller
 
             $stmt->execute([$email]);
         } catch (\Exception $e) {
-            // Log error but don't fail the form submission
+
             error_log('Failed to subscribe to newsletter: ' . $e->getMessage());
         }
     }

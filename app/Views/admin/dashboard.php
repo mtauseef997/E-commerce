@@ -1,4 +1,3 @@
-<!-- Dashboard Statistics -->
 <div class="dashboard-stats">
     <div class="stat-card">
         <div class="stat-header">
@@ -53,7 +52,7 @@
         </div>
     </div>
 </div>
-<!-- Monthly Statistics -->
+
 <?php if ($monthly_stats): ?>
 <div class="dashboard-stats">
     <div class="stat-card success">
@@ -110,7 +109,6 @@
     </div>
 </div>
 <?php endif; ?>
-<!-- Recent Orders -->
 <?php if (!empty($recent_orders)): ?>
 <div class="data-table">
     <div class="table-header">
@@ -137,57 +135,61 @@
             </thead>
             <tbody>
                 <?php foreach ($recent_orders as $order): ?>
-                    <tr>
-                        <td>
-                            <strong><?= $this->escape($order['order_number']) ?></strong>
-                        </td>
-                        <td>
-                            <div>
-                                <strong><?= $this->escape($order['first_name'] . ' ' . $order['last_name']) ?></strong>
-                                <br>
-                                <small class="text-muted"><?= $this->escape($order['email']) ?></small>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="badge"><?= $order['item_count'] ?> items</span>
-                        </td>
-                        <td>
-                            <strong><?= $this->currency($order['total_amount']) ?></strong>
-                        </td>
-                        <td>
-                            <span class="status-badge <?= $order['status'] ?>">
-                                <?= ucfirst($order['status']) ?>
-                            </span>
-                        </td>
-                        <td>
-                            <?= $this->date($order['created_at'], 'M j, Y') ?>
-                        </td>
-                        <td>
-                            <div class="table-actions-cell">
-                                <a href="<?= $this->url('/admin/order/' . $order['id']) ?>" 
-                                   class="btn btn-sm btn-outline" 
-                                   title="View Order">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <select class="form-select form-select-sm" 
-                                        onchange="updateOrderStatus(<?= $order['id'] ?>, this.value)">
-                                    <option value="">Change Status</option>
-                                    <option value="pending" <?= $order['status'] === 'pending' ? 'selected' : '' ?>>Pending</option>
-                                    <option value="processing" <?= $order['status'] === 'processing' ? 'selected' : '' ?>>Processing</option>
-                                    <option value="shipped" <?= $order['status'] === 'shipped' ? 'selected' : '' ?>>Shipped</option>
-                                    <option value="delivered" <?= $order['status'] === 'delivered' ? 'selected' : '' ?>>Delivered</option>
-                                    <option value="cancelled" <?= $order['status'] === 'cancelled' ? 'selected' : '' ?>>Cancelled</option>
-                                </select>
-                            </div>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>
+                        <strong><?= $this->escape($order['order_number']) ?></strong>
+                    </td>
+                    <td>
+                        <div>
+                            <strong><?= $this->escape($order['first_name'] . ' ' . $order['last_name']) ?></strong>
+                            <br>
+                            <small class="text-muted"><?= $this->escape($order['email']) ?></small>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge"><?= $order['item_count'] ?> items</span>
+                    </td>
+                    <td>
+                        <strong><?= $this->currency($order['total_amount']) ?></strong>
+                    </td>
+                    <td>
+                        <span class="status-badge <?= $order['status'] ?>">
+                            <?= ucfirst($order['status']) ?>
+                        </span>
+                    </td>
+                    <td>
+                        <?= $this->date($order['created_at'], 'M j, Y') ?>
+                    </td>
+                    <td>
+                        <div class="table-actions-cell">
+                            <a href="<?= $this->url('/admin/order/' . $order['id']) ?>" class="btn btn-sm btn-outline"
+                                title="View Order">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <select class="form-select form-select-sm"
+                                onchange="updateOrderStatus(<?= $order['id'] ?>, this.value)">
+                                <option value="">Change Status</option>
+                                <option value="pending" <?= $order['status'] === 'pending' ? 'selected' : '' ?>>Pending
+                                </option>
+                                <option value="processing" <?= $order['status'] === 'processing' ? 'selected' : '' ?>>
+                                    Processing</option>
+                                <option value="shipped" <?= $order['status'] === 'shipped' ? 'selected' : '' ?>>Shipped
+                                </option>
+                                <option value="delivered" <?= $order['status'] === 'delivered' ? 'selected' : '' ?>>
+                                    Delivered</option>
+                                <option value="cancelled" <?= $order['status'] === 'cancelled' ? 'selected' : '' ?>>
+                                    Cancelled</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     </div>
 </div>
 <?php endif; ?>
-<!-- Quick Actions -->
+
 <div class="dashboard-actions" style="margin-top: 2rem;">
     <div class="form-grid">
         <div class="form-section">
@@ -235,11 +237,13 @@
     flex-direction: column;
     gap: 1rem;
 }
+
 .system-status {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
+
 .status-item {
     display: flex;
     align-items: center;
@@ -248,23 +252,28 @@
     background: var(--bg-secondary);
     border-radius: var(--radius-md);
 }
+
 .status-indicator {
     width: 0.75rem;
     height: 0.75rem;
     border-radius: 50%;
     background: var(--success-color);
 }
+
 .status-indicator.warning {
     background: var(--warning-color);
 }
+
 .status-indicator.error {
     background: var(--error-color);
 }
+
 .status-value {
     margin-left: auto;
     font-weight: 500;
     color: var(--success-color);
 }
+
 .badge {
     display: inline-block;
     padding: 0.25rem 0.5rem;
@@ -274,9 +283,11 @@
     font-size: 0.75rem;
     font-weight: 500;
 }
+
 .text-muted {
     color: var(--text-light);
 }
+
 .form-select-sm {
     padding: 0.375rem 0.75rem;
     font-size: 0.875rem;

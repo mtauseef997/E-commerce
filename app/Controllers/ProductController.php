@@ -22,7 +22,7 @@ class ProductController extends Controller
         $limit = PRODUCTS_PER_PAGE;
         $offset = ($page - 1) * $limit;
 
-        // Separate database filters from sorting parameters
+
         $filters = [
             'category_id' => $this->request->get('category'),
             'search' => $this->request->get('search'),

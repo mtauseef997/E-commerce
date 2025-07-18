@@ -168,7 +168,7 @@ class CheckoutController extends Controller
             'notes' => $notes
         ];
         try {
-            // Debug logging
+
             error_log('CheckoutController::process - About to create order');
             error_log('Order data: ' . print_r($orderData, true));
             error_log('Order items: ' . print_r($orderItems, true));

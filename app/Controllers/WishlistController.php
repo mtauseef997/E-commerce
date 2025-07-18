@@ -20,18 +20,18 @@ class WishlistController extends Controller
 
     public function index()
     {
-        // Check if user is logged in
+
         if (!$this->getCurrentUser()) {
             $this->setFlash('error', 'Please login to view your wishlist.');
             $this->redirect('/login');
         }
 
         $userId = $this->getCurrentUser()['id'];
-        
+
         try {
-            // Get wishlist items with product details
+
             $wishlistItems = $this->wishlistModel->getUserWishlistWithProducts($userId);
-            
+
             $this->render('wishlist/index', [
                 'title' => 'My Wishlist - ' . APP_NAME,
                 'wishlist_items' => $wishlistItems,
@@ -50,7 +50,6 @@ class WishlistController extends Controller
             $this->redirect('/wishlist');
         }
 
-        // Check if user is logged in
         if (!$this->getCurrentUser()) {
             if ($this->request->isAjax()) {
                 return $this->json([
@@ -77,7 +76,7 @@ class WishlistController extends Controller
         }
 
         try {
-            // Check if product exists
+
             $product = $this->productModel->find($productId);
             if (!$product) {
                 if ($this->request->isAjax()) {
@@ -90,7 +89,6 @@ class WishlistController extends Controller
                 $this->redirect('/wishlist');
             }
 
-            // Check if already in wishlist
             if ($this->wishlistModel->isInWishlist($userId, $productId)) {
                 if ($this->request->isAjax()) {
                     return $this->json([
@@ -102,7 +100,6 @@ class WishlistController extends Controller
                 $this->redirect('/wishlist');
             }
 
-            // Add to wishlist
             $this->wishlistModel->addToWishlist($userId, $productId);
 
             if ($this->request->isAjax()) {
@@ -115,17 +112,16 @@ class WishlistController extends Controller
 
             $this->setFlash('success', 'Product added to wishlist!');
             $this->redirect('/wishlist');
-
         } catch (\Exception $e) {
             error_log('WishlistController::add - Error: ' . $e->getMessage());
-            
+
             if ($this->request->isAjax()) {
                 return $this->json([
                     'success' => false,
                     'message' => 'Failed to add product to wishlist.'
                 ]);
             }
-            
+
             $this->setFlash('error', 'Failed to add product to wishlist.');
             $this->redirect('/wishlist');
         }
@@ -137,7 +133,6 @@ class WishlistController extends Controller
             $this->redirect('/wishlist');
         }
 
-        // Check if user is logged in
         if (!$this->getCurrentUser()) {
             if ($this->request->isAjax()) {
                 return $this->json([
@@ -164,7 +159,7 @@ class WishlistController extends Controller
         }
 
         try {
-            // Remove from wishlist
+
             $this->wishlistModel->removeFromWishlist($userId, $productId);
 
             if ($this->request->isAjax()) {
@@ -177,17 +172,16 @@ class WishlistController extends Controller
 
             $this->setFlash('success', 'Product removed from wishlist.');
             $this->redirect('/wishlist');
-
         } catch (\Exception $e) {
             error_log('WishlistController::remove - Error: ' . $e->getMessage());
-            
+
             if ($this->request->isAjax()) {
                 return $this->json([
                     'success' => false,
                     'message' => 'Failed to remove product from wishlist.'
                 ]);
             }
-            
+
             $this->setFlash('error', 'Failed to remove product from wishlist.');
             $this->redirect('/wishlist');
         }
@@ -202,7 +196,6 @@ class WishlistController extends Controller
             ]);
         }
 
-        // Check if user is logged in
         if (!$this->getCurrentUser()) {
             return $this->json([
                 'success' => false,
@@ -221,7 +214,7 @@ class WishlistController extends Controller
         }
 
         try {
-            // Check if product exists
+
             $product = $this->productModel->find($productId);
             if (!$product) {
                 return $this->json([
@@ -230,9 +223,9 @@ class WishlistController extends Controller
                 ]);
             }
 
-            // Toggle wishlist status
+
             $isInWishlist = $this->wishlistModel->isInWishlist($userId, $productId);
-            
+
             if ($isInWishlist) {
                 $this->wishlistModel->removeFromWishlist($userId, $productId);
                 $message = 'Product removed from wishlist.';
@@ -250,10 +243,9 @@ class WishlistController extends Controller
                 'is_in_wishlist' => !$isInWishlist,
                 'wishlist_count' => $this->wishlistModel->getWishlistCount($userId)
             ]);
-
         } catch (\Exception $e) {
             error_log('WishlistController::toggle - Error: ' . $e->getMessage());
-            
+
             return $this->json([
                 'success' => false,
                 'message' => 'Failed to update wishlist.'
@@ -267,7 +259,7 @@ class WishlistController extends Controller
             $this->redirect('/wishlist');
         }
 
-        // Check if user is logged in
+
         if (!$this->getCurrentUser()) {
             if ($this->request->isAjax()) {
                 return $this->json([
@@ -294,17 +286,16 @@ class WishlistController extends Controller
 
             $this->setFlash('success', 'Wishlist cleared successfully.');
             $this->redirect('/wishlist');
-
         } catch (\Exception $e) {
             error_log('WishlistController::clear - Error: ' . $e->getMessage());
-            
+
             if ($this->request->isAjax()) {
                 return $this->json([
                     'success' => false,
                     'message' => 'Failed to clear wishlist.'
                 ]);
             }
-            
+
             $this->setFlash('error', 'Failed to clear wishlist.');
             $this->redirect('/wishlist');
         }
