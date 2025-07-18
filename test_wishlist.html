@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Wishlist Functionality</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        button { padding: 10px 20px; margin: 10px; background: #007cba; color: white; border: none; cursor: pointer; }
+        button:hover { background: #005a87; }
+        .wishlist-btn { background: #e91e63; }
+        .wishlist-btn:hover { background: #c2185b; }
+        .result { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        pre { background: #333; color: #fff; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        .status { padding: 5px 10px; border-radius: 3px; margin: 5px 0; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>Test Wishlist Functionality</h1>
+    
+    <div>
+        <h3>Test Wishlist Operations:</h3>
+        <button onclick="testAddToWishlist()">Add Product 1 to Wishlist</button>
+        <button onclick="testToggleWishlist()" class="wishlist-btn">Toggle Product 2 Wishlist</button>
+        <button onclick="testRemoveFromWishlist()" class="wishlist-btn">Remove Product 1 from Wishlist</button>
+        <button onclick="viewWishlist()">View Wishlist Page</button>
+        <button onclick="clearResults()">Clear Results</button>
+    </div>
+    
+    <div id="results"></div>
+    
+    <script>
+        const testProductId1 = 1; // Use product ID 1 for testing
+        const testProductId2 = 2; // Use product ID 2 for testing
+        
+        async function testAddToWishlist() {
+            await testWishlistEndpoint('/wishlist/add', 'Add to Wishlist', {
+                product_id: testProductId1
+            });
+        }
+        
+        async function testToggleWishlist() {
+            await testWishlistEndpoint('/wishlist/toggle', 'Toggle Wishlist', {
+                product_id: testProductId2
+            });
+        }
+        
+        async function testRemoveFromWishlist() {
+            await testWishlistEndpoint('/wishlist/remove', 'Remove from Wishlist', {
+                product_id: testProductId1
+            });
+        }
+        
+        async function viewWishlist() {
+            window.open('/wishlist', '_blank');
+        }
+        
+        async function testWishlistEndpoint(url, name, data) {
+            const resultsDiv = document.getElementById('results');
+            
+            try {
+                const formData = new FormData();
+                Object.keys(data).forEach(key => {
+                    formData.append(key, data[key]);
+                });
+                
+                console.log(`Testing ${name} at ${url}`);
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                
+                console.log(`${name} Response:`, response);
+                
+                const contentType = response.headers.get('content-type');
+                let responseData;
+                
+                if (contentType && contentType.includes('application/json')) {
+                    responseData = await response.json();
+                } else {
+                    responseData = await response.text();
+                }
+                
+                const statusClass = response.ok && responseData.success ? 'success' : 'error';
+                
+                const resultHtml = `
+                    <div class="result">
+                        <h4>${name} Result</h4>
+                        <div class="status ${statusClass}">
+                            Status: ${response.status} ${response.statusText}
+                        </div>
+                        <p><strong>URL:</strong> ${url}</p>
+                        <p><strong>Data Sent:</strong> ${JSON.stringify(data)}</p>
+                        <p><strong>Content-Type:</strong> ${contentType}</p>
+                        <p><strong>Response:</strong></p>
+                        <pre>${JSON.stringify(responseData, null, 2)}</pre>
+                    </div>
+                `;
+                
+                resultsDiv.innerHTML += resultHtml;
+                
+                // Show notification if response has message
+                if (responseData && responseData.message) {
+                    const notificationClass = responseData.success ? 'success' : 'error';
+                    const notification = `<div class="status ${notificationClass}">${responseData.message}</div>`;
+                    resultsDiv.innerHTML += notification;
+                }
+                
+            } catch (error) {
+                console.error(`${name} Error:`, error);
+                
+                const errorHtml = `
+                    <div class="result">
+                        <h4>${name} Error</h4>
+                        <div class="status error">Network or JavaScript Error</div>
+                        <p><strong>URL:</strong> ${url}</p>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <pre>${error.stack}</pre>
+                    </div>
+                `;
+                
+                resultsDiv.innerHTML += errorHtml;
+            }
+        }
+        
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        // Test the global toggleWishlist function
+        async function testGlobalToggle() {
+            if (typeof window.toggleWishlist === 'function') {
+                console.log('Testing global toggleWishlist function');
+                window.toggleWishlist(testProductId1);
+            } else {
+                console.error('Global toggleWishlist function not found');
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML += `
+                    <div class="result">
+                        <h4>Global Function Test</h4>
+                        <div class="status error">toggleWishlist function not found in window object</div>
+                        <p>Make sure main.js is loaded properly</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Add test for global function
+        window.addEventListener('load', function() {
+            console.log('Wishlist test page loaded');
+            
+            // Check if main.js functions are available
+            const functions = ['toggleWishlist', 'addToCart'];
+            functions.forEach(func => {
+                if (typeof window[func] === 'function') {
+                    console.log(`✅ ${func} function is available`);
+                } else {
+                    console.warn(`❌ ${func} function is NOT available`);
+                }
+            });
+            
+            // Add a button to test global function
+            const testButton = document.createElement('button');
+            testButton.textContent = 'Test Global toggleWishlist()';
+            testButton.onclick = testGlobalToggle;
+            testButton.className = 'wishlist-btn';
+            document.querySelector('div').appendChild(testButton);
+        });
+    </script>
+    
+    <!-- Include main.js to test global functions -->
+    <script src="/js/main.js"></script>
+</body>
+</html>

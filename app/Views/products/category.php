@@ -191,7 +191,10 @@
                                         <?php endif; ?>
 
                                         <div class="product-actions">
-                                            <button class="action-btn wishlist-btn" title="Add to Wishlist">
+                                            <button class="action-btn wishlist-btn"
+                                                data-product-id="<?= $product['id'] ?>"
+                                                title="Add to Wishlist"
+                                                onclick="toggleWishlist(<?= $product['id'] ?>)">
                                                 <i class="far fa-heart"></i>
                                             </button>
                                             <button class="action-btn quick-view-btn" title="Quick View"
